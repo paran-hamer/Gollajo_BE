@@ -1,0 +1,25 @@
+package com.gollajo.domain.test.controller;
+
+import com.gollajo.domain.test.service.TestService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/test")
+@Slf4j
+public class TestController {
+
+    private final TestService testService;
+
+    @GetMapping
+    public ResponseEntity<String> test(){
+        final String testMessage = testService.test();
+        return ResponseEntity.ok(testMessage);
+    }
+
+}

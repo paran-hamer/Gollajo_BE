@@ -46,23 +46,21 @@ public class Post {
     private Post(
             final Member member,
             final PostBody postBody,
-            final PostState postState,
-            final List<Option> options
+            final PostState postState
     ){
         this.member = member;
         this.postBody = postBody;
         this.postState = postState;
-        for(Option option:options){
-            if(option instanceof StringOption){
-                StringOption stringOption = (StringOption) option;
-                this.stringOptions.add(stringOption);
-            }else{
-                ImageOption imageOption = (ImageOption) option;
-                this.imageOptions.add(imageOption);
-            }
-        }
     }
 
-
+    public void mapPostStringOption(Post post,List<String> optionContent){
+        for(String content:optionContent){
+            StringOption stringOption = StringOption.builder()
+                    .post(post)
+                    .stringContent(content)
+                    .build();
+            this.stringOptions.add(stringOption);
+        }
+    }
 
 }

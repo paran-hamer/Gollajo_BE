@@ -73,5 +73,8 @@ public class Member {
         this.age = age;
 
     }
+    public void plusNumOfVoting(){
+        this.numOfVoting = this.numOfVoting + 1;
+    }
 
 }

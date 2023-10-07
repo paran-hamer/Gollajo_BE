@@ -1,5 +1,6 @@
 package com.gollajo.domain.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.post.entity.enums.PostType;
 import lombok.Builder;
@@ -10,13 +11,16 @@ import java.util.List;
 
 @Builder
 public record PostCreateRequest(
-        Member member,
         String title,
         String content,
+        @JsonProperty("max_votes")
         int maxVotes,
+        @JsonProperty("point_per_vote")
         int pointPerVote,
+        @JsonProperty("expiration_date")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime expirationDate,
+        @JsonProperty("option_content")
         List<String> optionContent
 ) {
 }

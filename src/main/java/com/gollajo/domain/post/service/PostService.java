@@ -1,5 +1,7 @@
 package com.gollajo.domain.post.service;
 
+import com.gollajo.domain.member.entity.Member;
+import com.gollajo.domain.member.repository.MemberRepository;
 import com.gollajo.domain.post.dto.PostCreateRequest;
 import com.gollajo.domain.post.entity.Post;
 import com.gollajo.domain.post.entity.PostBody;
@@ -21,9 +23,10 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
     private final AmazonS3Service amazonS3Service;
 
-    public Long createStringPost(PostCreateRequest request){
+    public Long createStringPost(PostCreateRequest request, Member member){
         PostBody createdPostBody = PostBody.builder()
                 .postType(PostType.STRING_OPTION)
                 .title(request.title())
@@ -34,11 +37,13 @@ public class PostService {
                 .build();
         Post post = Post.builder()
                 .postBody(createdPostBody)
-                .member(request.member())
+                .member(member)
                 .postState(PostState.STATE_GENERATING)
                 .build();
         post.mapPostStringOption(post,request.optionContent());
 
+        member.plusNumOfVoting();
+        memberRepository.save(member);
         postRepository.save(post);
         return post.getId();
 

@@ -2,7 +2,6 @@ package com.gollajo.domain.post.entity;
 
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.post.entity.enums.PostState;
-import com.gollajo.domain.post.entity.enums.PostType;
 import com.gollajo.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -37,7 +36,7 @@ public class Post extends BaseTimeEntity {
     //TODO: cascade타입을 all로 두면 안될거같음. 변경 필요
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StringOption> stringOptions = new ArrayList<>();
+    private List<TextOption> textOptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
@@ -56,11 +55,11 @@ public class Post extends BaseTimeEntity {
 
     public void mapPostStringOption(Post post,List<String> optionContent){
         for(String content:optionContent){
-            StringOption stringOption = StringOption.builder()
+            TextOption textOption = TextOption.builder()
                     .post(post)
                     .stringContent(content)
                     .build();
-            this.stringOptions.add(stringOption);
+            this.textOptions.add(textOption);
         }
     }
     public void mapPostImageOption(Post post,List<String> optionContent,List<String> imageUrls){

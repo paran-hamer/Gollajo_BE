@@ -138,29 +138,26 @@ public class PostService {
         return post.getId();
     }
 
-    public Long deletePost(Long postId){
+    public Long deletePost(Member member, Long postId) {
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
-        Long deletedPostId = post.getId();
+        Post post = postExceptionHandler.deletePostException(member, postId);
 
         // 이미지 타입일 경우 s3 서버도 이미지 추가 삭제
-        if(post.getPostBody().getPostType()==PostType.IMAGE_OPTION){
+        if (post.getPostBody().getPostType() == PostType.IMAGE_OPTION) {
             List<ImageOption> imageOptions = post.getImageOptions();
             amazonS3Service.deleteImages(imageOptions);
         }
 
         postRepository.delete(post);
 
-        return deletedPostId;
+        return post.getId();
 
     }
 
     public Long cancelPost(Long postId,Member member){
 
         // 투표글 취소(삭제)처리
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
-
-        postExceptionHandler.cancelPostException(post,member);
+        Post post = postExceptionHandler.cancelPostException(postId, member);
 
         if(post.getPostBody().getPostType()==PostType.IMAGE_OPTION){
             amazonS3Service.deleteImages(post.getImageOptions());

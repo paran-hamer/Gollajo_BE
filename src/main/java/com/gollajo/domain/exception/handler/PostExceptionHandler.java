@@ -21,7 +21,22 @@ public class PostExceptionHandler {
     private static final int CONTENT_LENGTH=30;         // 제목,내용 길이 제한
     private static final int MINIMuM_SETUP_TIME = 10;   // 최소 설정 시간
 
-    public void cancelPostException(Post post, Member member){
+    public Post deletePostException(Member member, Long postId){
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
+
+        // 삭제할려는 멤버가 투표글의 작성자인지 검증
+        if(post.getMember()!=member){
+            throw new CustomException(ErrorCode.NO_AUTHORITY);
+        }
+
+        return post;
+    }
+
+    public Post cancelPostException(Long postId, Member member){
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
+
         //작성자 확인 예외
         if(post.getMember()!=member){
             throw new CustomException(ErrorCode.NO_AUTHORITY);
@@ -34,6 +49,8 @@ public class PostExceptionHandler {
                 throw new CustomException(ErrorCode.TRY_DELETE_INSTEAD_OF_CANCLE);
             }
         }
+
+        return post;
     }
 
     public void createPostException(PostCreateRequest request,Member member){

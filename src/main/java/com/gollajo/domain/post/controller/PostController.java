@@ -4,6 +4,7 @@ import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.dto.PostCreateRequest;
 import com.gollajo.domain.post.service.PostService;
+import com.gollajo.domain.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final VoteService voteService;
     private final MemberService memberService;
 
     @PostMapping(value = "/create",params = "type=1")
@@ -58,11 +60,32 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Long> deletePost(@PathVariable Long postId){
-        Long deletedPostId = postService.deletePost(postId);
+
+        Long memberId = 1L;
+        Member member = memberService.findById(memberId);
+
+        Long deletedPostId = postService.deletePost(member,postId);
 
         return new ResponseEntity<>(deletedPostId, HttpStatus.NO_CONTENT);
 
     }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Void> showPost(@PathVariable Long postId){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/{optionId}")
+    public ResponseEntity<Void> vote(@PathVariable Long postId,
+                                     @PathVariable Long optionId){
+        Long memberId = 1L;
+        Member member = memberService.findById(memberId);
+
+        voteService.vote(member,postId,optionId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
 }

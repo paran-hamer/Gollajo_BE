@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class StringOption implements Option {
+public class TextOption implements Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class StringOption implements Option {
     private String stringContent;
 
     @Builder
-    private StringOption(Post post,String stringContent){
+    private TextOption(Post post, String stringContent){
         this.post = post;
         this.stringContent = stringContent;
     }

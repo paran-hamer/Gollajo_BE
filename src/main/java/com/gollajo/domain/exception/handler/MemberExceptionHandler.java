@@ -1,9 +1,9 @@
-package com.gollajo.domain.member.exception;
+package com.gollajo.domain.exception.handler;
 
 import com.gollajo.domain.member.dto.CreateMemberRequest;
 import com.gollajo.domain.member.repository.MemberRepository;
-import com.gollajo.global.exception.CustomException;
-import com.gollajo.global.exception.ErrorCode;
+import com.gollajo.domain.exception.CustomException;
+import com.gollajo.domain.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

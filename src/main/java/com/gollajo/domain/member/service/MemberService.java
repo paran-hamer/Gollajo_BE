@@ -3,7 +3,7 @@ package com.gollajo.domain.member.service;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.entity.enums.Grade;
-import com.gollajo.domain.member.exception.MemberExceptionHandler;
+import com.gollajo.domain.exception.handler.MemberExceptionHandler;
 import com.gollajo.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;

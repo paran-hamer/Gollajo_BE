@@ -1,12 +1,12 @@
-package com.gollajo.domain.post.exception;
+package com.gollajo.domain.exception.handler;
 
+import com.gollajo.domain.exception.CustomException;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.post.dto.PostCreateRequest;
 import com.gollajo.domain.post.entity.Post;
 import com.gollajo.domain.post.entity.enums.PostState;
 import com.gollajo.domain.post.repository.PostRepository;
-import com.gollajo.global.exception.CustomException;
-import com.gollajo.global.exception.ErrorCode;
+import com.gollajo.domain.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

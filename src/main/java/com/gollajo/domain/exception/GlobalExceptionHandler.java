@@ -1,6 +1,6 @@
-package com.gollajo.global.exception;
+package com.gollajo.domain.exception;
 
-import com.gollajo.global.exception.dto.ErrorCodeResponse;
+import com.gollajo.domain.exception.dto.ErrorCodeResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

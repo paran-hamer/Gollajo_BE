@@ -1,13 +1,11 @@
-package com.gollajo.domain.account.exception;
+package com.gollajo.domain.exception.handler;
 
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.entity.enums.AccountState;
 import com.gollajo.domain.account.entity.enums.AccountType;
 import com.gollajo.domain.account.repository.AccountRepository;
-import com.gollajo.domain.member.entity.Member;
-import com.gollajo.domain.post.entity.Post;
-import com.gollajo.global.exception.CustomException;
-import com.gollajo.global.exception.ErrorCode;
+import com.gollajo.domain.exception.CustomException;
+import com.gollajo.domain.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.gollajo.global.exception;
+package com.gollajo.domain.exception;
 
 import lombok.AccessLevel;
 import lombok.Builder;

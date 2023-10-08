@@ -1,4 +1,4 @@
-package com.gollajo.global.exception.dto;
+package com.gollajo.domain.exception.dto;
 
 import lombok.Builder;
 

@@ -38,6 +38,7 @@ public class PostController {
         return new ResponseEntity<>(postListResponses, HttpStatus.OK);
     }
 
+
     @Operation(summary = "객관식형 투표글 생성", description = "객관식형 투표글을 생성한다.")
     @ApiResponse(responseCode = "200", description = "생성 성공")
     @Parameter(name="type",description = "투표글 생성 타입 설정")
@@ -51,6 +52,7 @@ public class PostController {
         Long postId = postService.createStringPost(postCreateRequest,member);
         return ResponseEntity.ok(postId);
     }
+
 
     @Operation(summary = "이미지형 투표글 생성", description = "이미지형 투표글을 생성한다.")
     @ApiResponse(responseCode = "200", description = "생성 성공")
@@ -69,8 +71,9 @@ public class PostController {
         return ResponseEntity.ok(postId);
     }
 
+
     @Operation(summary = "투표글 취소하기", description = "생성중인 투표글을 취소한다.")
-    @ApiResponse(responseCode = "200", description = "취소 성공")
+    @ApiResponse(responseCode = "204", description = "취소 성공")
     @GetMapping(value = "/cancel/{postId}")
     public ResponseEntity<Long> cancelPost(@PathVariable Long postId){
         Long memberId = 1L;
@@ -81,6 +84,8 @@ public class PostController {
     }
 
 
+    @Operation(summary = "투표글 삭제하기", description = "생성중인 투표글을 삭제한다.")
+    @ApiResponse(responseCode = "204", description = "삭제 성공")
     @DeleteMapping("/{postId}")
     public ResponseEntity<Long> deletePost(@PathVariable Long postId){
 
@@ -93,12 +98,16 @@ public class PostController {
 
     }
 
+    @Operation(summary = "투표글 상세조회하기", description = "투표글에 대한 상세조회한다.")
+    @ApiResponse(responseCode = "200", description = "상세조회 성공")
     @GetMapping("/{postId}")
     public ResponseEntity<PostInfoResponse> showPostInfo(@PathVariable Long postId){
         PostInfoResponse postInfoResponse = postService.showPostInfo(postId);
         return new ResponseEntity<>(postInfoResponse,HttpStatus.OK);
     }
 
+    @Operation(summary = "투표글에 투표하기", description = "투표글에 해당옵션으로 투표한다.")
+    @ApiResponse(responseCode = "200", description = "투표 성공")
     @GetMapping("/{postId}/{optionId}")
     public ResponseEntity<List<VoteResultResponse>> vote
             (@PathVariable Long postId,

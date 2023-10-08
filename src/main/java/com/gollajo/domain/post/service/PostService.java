@@ -1,7 +1,6 @@
 package com.gollajo.domain.post.service;
 
 import com.gollajo.domain.account.entity.Account;
-import com.gollajo.domain.account.entity.enums.AccountState;
 import com.gollajo.domain.account.exception.AccountExceptionHandler;
 import com.gollajo.domain.account.repository.AccountRepository;
 import com.gollajo.domain.member.entity.Member;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -41,6 +39,8 @@ public class PostService {
 
 
     public Long createStringPost(PostCreateRequest request, Member member){
+
+        postExceptionHandler.createPostException(request,member);
 
         PostBody createdPostBody = PostBody.builder()
                 .postType(PostType.STRING_OPTION)
@@ -91,13 +91,16 @@ public class PostService {
     }
 
     public Long deletePost(Long postId){
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
 
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
         Long deletedPostId = post.getId();
+
+        // 이미지 타입일 경우 s3 서버도 이미지 추가 삭제
         if(post.getPostBody().getPostType()==PostType.IMAGE_OPTION){
             List<ImageOption> imageOptions = post.getImageOptions();
             amazonS3Service.deleteImages(imageOptions);
         }
+
         postRepository.delete(post);
 
         return deletedPostId;

@@ -56,4 +56,35 @@ public class MemberController {
 
         return new ResponseEntity<>(currentPoint, HttpStatus.OK);
     }
+
+
+    @Operation(summary = "내 정보 업데이트", description = "내 정보를 수정한다")
+    @ApiResponse(responseCode = "200", description = "정보 수정 성공")
+    @PostMapping("/update")
+    public ResponseEntity<Member> update(CreateMemberRequest createMemberRequest){
+        //TODO : 실제 운영 서버에서는 jwt토큰으로 member불러와서 저장할 예정
+        Long memberId = 1L;
+        Member member = memberService.findById(memberId);
+
+        Member updatedMember = memberService.update(createMemberRequest);
+        //TODO : 내 정보보기에서 Dto를 따로 만들지 고민중
+
+        return new ResponseEntity<>(updatedMember, HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "내 정보보기", description = "내 정보를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정보조회 성공")
+    @GetMapping("/my-page")
+    public ResponseEntity<Member> showMyPage(){
+        //TODO : 실제 운영 서버에서는 jwt토큰으로 member불러와서 저장할 예정
+        Long memberId = 1L;
+        Member member = memberService.findById(memberId);
+
+        //TODO : 내 정보보기에서 Dto를 따로 만들지 고민중
+
+        return new ResponseEntity<>(member, HttpStatus.OK);
+    }
+
+
 }

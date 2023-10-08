@@ -48,6 +48,24 @@ public class MemberService {
         return memberRepository.findById(memberId).get();
     }
 
+    //내 정보를 업데이트 한다.
+    public Member update(CreateMemberRequest request){
+
+        memberExceptionHandler.signUpException(request);
+
+        Member member = Member.builder()
+                .email(request.email())
+                .nickname(request.nickname())
+                .socialType(request.socialType())
+                .socialId(request.socialId())
+                .build();
+
+        memberRepository.save(member);
+
+        return member;
+    }
+
+
     //투표글 생성시 포인트 차감하는 함수
     public Member saveCreatePostMember(Member member,int minusAmount){
 

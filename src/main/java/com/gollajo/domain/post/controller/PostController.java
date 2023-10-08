@@ -108,12 +108,12 @@ public class PostController {
 
     @Operation(summary = "투표글에 투표하기", description = "투표글에 해당옵션으로 투표한다.")
     @ApiResponse(responseCode = "200", description = "투표 성공")
-    @GetMapping("/{postId}/{optionId}")
+    @GetMapping("/{postId}/vote/{optionId}")
     public ResponseEntity<List<VoteResultResponse>> vote
             (@PathVariable Long postId,
              @PathVariable Long optionId){
 
-        Long memberId = 1L;
+        Long memberId = 2L;
         Member member = memberService.findById(memberId);
 
         List<VoteResultResponse> voteResult =

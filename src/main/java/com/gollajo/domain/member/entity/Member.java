@@ -78,8 +78,11 @@ public class Member extends BaseTimeEntity {
         this.numOfVoting = this.numOfVoting + 1;
     }
 
-    public void cancelPoint(int returnAmount){
+    public void plusPoint(int returnAmount){
         this.point += returnAmount;
     }
 
+    public void minusPoint(int returnAmount){
+        this.point -= returnAmount;
+    }
 }

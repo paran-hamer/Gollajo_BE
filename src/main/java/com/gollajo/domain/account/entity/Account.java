@@ -28,25 +28,15 @@ public class Account {
     @Embedded
     private AccountBody accountBody;
 
-    //포인트 충전 혹은 이벤트시 생성자
-    @Builder
-    private Account(
-            final Member member,
-            final AccountBody accountBody
-    ) {
-        this.targetMember = member;
-        this.accountBody = accountBody;
-    }
 
-    //투표글 생성 혹은 투표시 생성자
     @Builder
     private Account(
-            final Member member,
-            final Post post,
+            final Member targetMember,
+            final Post targetPost,
             final AccountBody accountBody
     ) {
-        this.targetMember = member;
-        this.targetPost = post;
+        this.targetMember = targetMember;
+        this.targetPost = targetPost;
         this.accountBody = accountBody;
     }
 }

@@ -1,6 +1,9 @@
 package com.gollajo.domain.post.service;
 
 import com.gollajo.domain.account.entity.Account;
+import com.gollajo.domain.account.entity.AccountBody;
+import com.gollajo.domain.account.entity.enums.AccountState;
+import com.gollajo.domain.account.entity.enums.AccountType;
 import com.gollajo.domain.account.exception.AccountExceptionHandler;
 import com.gollajo.domain.account.repository.AccountRepository;
 import com.gollajo.domain.member.entity.Member;
@@ -40,6 +43,7 @@ public class PostService {
 
     public Long createStringPost(PostCreateRequest request, Member member){
 
+        //투표글 생성
         postExceptionHandler.createPostException(request,member);
 
         PostBody createdPostBody = PostBody.builder()
@@ -60,6 +64,27 @@ public class PostService {
         post.mapPostStringOption(post,request.optionContent());
 
         postRepository.save(post);
+
+        //포인트 지불
+        int sumAmount = request.maxVotes() * request.pointPerVote();
+
+        member.minusPoint(sumAmount);
+        memberRepository.save(member);
+
+        //거래내역 저장
+        AccountBody accountBody = AccountBody.builder()
+                .amount(sumAmount)
+                .memo("Create textPost")
+                .accountType(AccountType.WITHDRAW)
+                .accountState(AccountState.HOLDING)
+                .build();
+
+        accountRepository.save(Account.builder()
+                .accountBody(accountBody)
+                .targetMember(member)
+                .targetPost(post)
+                .build());
+
 
         return post.getId();
 
@@ -88,6 +113,26 @@ public class PostService {
         post.mapPostImageOption(post,request.optionContent(),imgUrls);
 
         postRepository.save(post);
+
+        //포인트 지불
+        int sumAmount = request.maxVotes() * request.pointPerVote();
+
+        member.minusPoint(sumAmount);
+        memberRepository.save(member);
+
+        //거래내역 저장
+        AccountBody accountBody = AccountBody.builder()
+                .amount(sumAmount)
+                .memo("Create imagePost")
+                .accountType(AccountType.WITHDRAW)
+                .accountState(AccountState.HOLDING)
+                .build();
+
+        accountRepository.save(Account.builder()
+                .accountBody(accountBody)
+                .targetMember(member)
+                .targetPost(post)
+                .build());
 
         return post.getId();
     }
@@ -130,7 +175,7 @@ public class PostService {
         accountRepository.save(account);
 
         // 환불 처리
-        member.cancelPoint(account.getAccountBody().getAmount());
+        member.plusPoint(account.getAccountBody().getAmount());
         memberRepository.save(member);
 
         return post.getId();

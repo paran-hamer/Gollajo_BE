@@ -63,6 +63,11 @@ public class VoteService {
         return voteResult;
     }
 
+    public int CountCurrentPostCount(Post post){
+        int currentPostCount = voteRepository.countByPost(post);
+        return currentPostCount;
+    }
+
     private Vote makeVote(Member member,Post post,Long optionId){
 
         Vote vote;

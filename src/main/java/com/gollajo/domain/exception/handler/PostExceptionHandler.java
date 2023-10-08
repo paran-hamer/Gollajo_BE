@@ -22,8 +22,9 @@ public class PostExceptionHandler {
     private static final int MINIMuM_SETUP_TIME = 10;   // 최소 설정 시간
 
     public Post deletePostException(Member member, Long postId){
-
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
+        //존재하는 투표글인지 확인
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
 
         // 삭제할려는 멤버가 투표글의 작성자인지 검증
         if(post.getMember()!=member){
@@ -35,7 +36,9 @@ public class PostExceptionHandler {
 
     public Post cancelPostException(Long postId, Member member){
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
+        //존재하는 투표글인지 확인
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
 
         //작성자 확인 예외
         if(post.getMember()!=member){
@@ -77,5 +80,18 @@ public class PostExceptionHandler {
             throw new CustomException(ErrorCode.WRONG_DEADLINE);
         }
 
+    }
+
+    public Post showPostInfoException(Long postId){
+        //존재하는 투표글인지 확인
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
+
+        //생성중인 투표글이면 예외처리
+        if(post.getPostState()!=PostState.STATE_GENERATING){
+            throw new CustomException(ErrorCode.NO_ING_VOTE);
+        }
+
+        return post;
     }
 }

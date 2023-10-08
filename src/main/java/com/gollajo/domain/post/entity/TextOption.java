@@ -17,7 +17,7 @@ public class TextOption implements Option {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post")
     private Post post;
 
     @Column(name="string_content")

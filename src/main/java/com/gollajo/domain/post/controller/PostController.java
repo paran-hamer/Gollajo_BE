@@ -3,6 +3,8 @@ package com.gollajo.domain.post.controller;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.dto.PostCreateRequest;
+import com.gollajo.domain.post.dto.response.PostInfoResponse;
+import com.gollajo.domain.post.dto.response.PostListResponse;
 import com.gollajo.domain.post.service.PostService;
 import com.gollajo.domain.vote.dto.VoteResultResponse;
 import com.gollajo.domain.vote.service.VoteService;
@@ -24,6 +26,12 @@ public class PostController {
     private final PostService postService;
     private final VoteService voteService;
     private final MemberService memberService;
+
+    @GetMapping
+    public ResponseEntity<List<PostListResponse>> showAllPostList(){
+        List<PostListResponse> postListResponses = postService.showAllPostList();
+        return new ResponseEntity<>(postListResponses, HttpStatus.OK);
+    }
 
     @PostMapping(value = "/create",params = "type=1")
     public ResponseEntity<Long> createStringPost(@RequestBody PostCreateRequest postCreateRequest){
@@ -72,8 +80,9 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Void> showPost(@PathVariable Long postId){
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<PostInfoResponse> showPostInfo(@PathVariable Long postId){
+        PostInfoResponse postInfoResponse = postService.showPostInfo(postId);
+        return new ResponseEntity<>(postInfoResponse,HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/{optionId}")

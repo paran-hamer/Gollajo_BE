@@ -2,22 +2,31 @@ package com.gollajo.domain.post.service;
 
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.service.AccountService;
+import com.gollajo.domain.exception.CustomException;
+import com.gollajo.domain.exception.ErrorCode;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
-import com.gollajo.domain.post.dto.PostCreateRequest;
+import com.gollajo.domain.post.dto.*;
+import com.gollajo.domain.post.dto.response.*;
 import com.gollajo.domain.post.entity.ImageOption;
 import com.gollajo.domain.post.entity.Post;
 import com.gollajo.domain.post.entity.PostBody;
+import com.gollajo.domain.post.entity.TextOption;
 import com.gollajo.domain.post.entity.enums.PostState;
 import com.gollajo.domain.post.entity.enums.PostType;
 import com.gollajo.domain.exception.handler.PostExceptionHandler;
+import com.gollajo.domain.post.repository.ImageOptionRepository;
 import com.gollajo.domain.post.repository.PostRepository;
+import com.gollajo.domain.post.repository.TextOptionRepository;
 import com.gollajo.domain.s3.AmazonS3Service;
+import com.gollajo.domain.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,10 +37,39 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostExceptionHandler postExceptionHandler;
 
+    private final TextOptionRepository textOptionRepository;
+    private final ImageOptionRepository imageOptionRepository;
+
     private final AmazonS3Service amazonS3Service;
     private final AccountService accountService;
     private final MemberService memberService;
+    private final VoteService voteService;
 
+    // 진행중인 투표글 리스트 보기
+    public List<PostListResponse> showAllPostList(){
+
+        List<Post> postList = postRepository.findAll();
+
+        List<Post> posts = new ArrayList<>();
+        for (Post post : postList) {
+
+            if(post.getPostState()==PostState.STATE_PROCEEDING){
+                if(checkExpirationAt(post)){
+                    continue;
+                }
+                posts.add(post);
+            }
+        }
+        List<PostListResponse> postListResponses = transPostsToPostListResponses(posts);
+
+        if(postListResponses.isEmpty()){
+            throw new CustomException(ErrorCode.NO_VOTE_LIST);
+        }
+        return postListResponses;
+
+    }
+
+    //객관식형 투표글 생성
     public Long createStringPost(PostCreateRequest request, Member member){
 
         //객관식형 투표글 생성
@@ -51,6 +89,7 @@ public class PostService {
 
     }
 
+    //이미지형 투표글 생성
     public Long createImagePost(PostCreateRequest request, Member member, List<MultipartFile> images){
 
         //이미지형 투표글 생성
@@ -72,6 +111,7 @@ public class PostService {
         return post.getId();
     }
 
+    //투표글 삭제
     public Long deletePost(Member member, Long postId) {
 
         Post post = postExceptionHandler.deletePostException(member, postId);
@@ -88,6 +128,7 @@ public class PostService {
 
     }
 
+    //투표글 취소
     public Long cancelPost(Long postId,Member member){
 
         // 투표글 취소(삭제)처리
@@ -108,6 +149,31 @@ public class PostService {
         return post.getId();
     }
 
+    //투표글 상세조회
+    public PostInfoResponse showPostInfo(Long postId){
+
+        Post post = postExceptionHandler.showPostInfoException(postId);
+
+        List<PostInfoOption> options = makePostInfoOptionList(post);
+
+        PostInfoResponse result = PostInfoResponse.builder()
+                .postId(post.getId())
+                .title(post.getPostBody().getTitle())
+                .content(post.getPostBody().getContent())
+                .postType(post.getPostBody().getPostType())
+                .postState(post.getPostState())
+                .currentPostCount(voteService.CountCurrentPostCount(post))
+                .maxPostCount(post.getPostBody().getMaxVotes())
+                .pointPerVote(post.getPostBody().getPointPerVote())
+                .createdAt(post.getCreatedAt())
+                .expirationDate(post.getPostBody().getExpirationDate())
+                .options(options)
+                .build();
+
+        return result;
+    }
+
+    //투표글의 maxVotes가 다 칬을 때 투표글 상태 COMPLETE로 업데이트
     public Post updatePostState(Post post, int currentVoteCount){
 
         int maxVoteCount = post.getPostBody().getMaxVotes();
@@ -140,6 +206,80 @@ public class PostService {
                 .build();
 
         return post;
+    }
+
+    private List<PostInfoOption> makePostInfoOptionList(Post post){
+
+        List<PostInfoOption> result = new ArrayList<>();
+
+        if(post.getPostBody().getPostType()==PostType.TEXT_OPTION){
+
+            List<TextOption> textOptions = textOptionRepository.findAllByPost(post);
+
+            for(TextOption textOption : textOptions){
+                result.add(PostInfoTextOption.builder()
+                        .id(textOption.getId())
+                        .content(textOption.getStringContent())
+                        .build());
+            }
+        } else{
+            List<ImageOption> imageOptions = imageOptionRepository.findAllByPost(post);
+
+            for(ImageOption imageOption : imageOptions){
+                result.add(PostInfoImageOption.builder()
+                        .id(imageOption.getId())
+                        .content(imageOption.getImageContent())
+                        .imgUrl(imageOption.getImageUrl())
+                        .build());
+            }
+        }
+
+        return result;
+    }
+
+    //만료되었으면 상태변경 후 true, 만료되지 않았으면 false
+    private boolean checkExpirationAt(Post post){
+
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        //날짜가 만료되었는지 확인
+        if(currentDate.isAfter(post.getPostBody().getExpirationDate())){
+
+            PostState currentState = post.getPostState();
+
+            if(currentState == PostState.STATE_PROCEEDING){
+
+                post.setPostState(PostState.STATE_EXPIRED_AND_NO_COMPLETE);
+                postRepository.save(post);
+
+            }else if(currentState == PostState.STATE_COMPLETE){
+
+                post.setPostState(PostState.STATE_EXPIRED_AND_COMPLETE);
+                postRepository.save(post);
+
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private List<PostListResponse> transPostsToPostListResponses(List<Post> posts){
+
+        List<PostListResponse> result = new ArrayList<>();
+        for (Post post : posts) {
+            PostListResponse postListResponse = PostListResponse.builder()
+                    .postId(post.getId())
+                    .postType(post.getPostBody().getPostType())
+                    .title(post.getPostBody().getTitle())
+                    .content(post.getPostBody().getContent())
+                    .pointPerVote(post.getPostBody().getPointPerVote())
+                    .expirationDate(post.getPostBody().getExpirationDate())
+                    .build();
+
+            result.add(postListResponse);
+        }
+
+        return result;
     }
 
 }

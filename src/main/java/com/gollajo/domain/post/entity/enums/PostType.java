@@ -1,7 +1,7 @@
 package com.gollajo.domain.post.entity.enums;
 
 public enum PostType {
-    STRING_OPTION(1),
+    TEXT_OPTION(1),
     IMAGE_OPTION(2),
     ;
 

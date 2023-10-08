@@ -47,7 +47,7 @@ public class PostService {
         postExceptionHandler.createPostException(request,member);
 
         PostBody createdPostBody = PostBody.builder()
-                .postType(PostType.STRING_OPTION)
+                .postType(PostType.TEXT_OPTION)
                 .title(request.title())
                 .content(request.content())
                 .maxVotes(request.maxVotes())

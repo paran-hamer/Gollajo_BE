@@ -7,6 +7,7 @@ import com.gollajo.domain.post.entity.TextOption;
 import com.gollajo.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +22,11 @@ public class Vote extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "member")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,4 +37,16 @@ public class Vote extends BaseTimeEntity {
     @JoinColumn(name = "image_option_id")
     private ImageOption imageOption;
 
+    @Builder
+    private Vote(
+            final Post post,
+            final Member member,
+            final TextOption textOption,
+            final ImageOption imageOption
+    ) {
+        this.post = post;
+        this.member = member;
+        this.textOption = textOption;
+        this.imageOption = imageOption;
+    }
 }

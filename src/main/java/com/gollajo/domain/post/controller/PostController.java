@@ -4,6 +4,7 @@ import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.dto.PostCreateRequest;
 import com.gollajo.domain.post.service.PostService;
+import com.gollajo.domain.vote.dto.VoteResultResponse;
 import com.gollajo.domain.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,14 +77,17 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/{optionId}")
-    public ResponseEntity<Void> vote(@PathVariable Long postId,
-                                     @PathVariable Long optionId){
+    public ResponseEntity<List<VoteResultResponse>> vote
+            (@PathVariable Long postId,
+             @PathVariable Long optionId){
+
         Long memberId = 1L;
         Member member = memberService.findById(memberId);
 
-        voteService.vote(member,postId,optionId);
+        List<VoteResultResponse> voteResult =
+                voteService.createVote(member, postId, optionId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(voteResult,HttpStatus.OK);
     }
 
 

@@ -3,6 +3,7 @@ package com.gollajo.domain.post.entity;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.post.entity.enums.PostState;
 import com.gollajo.domain.post.entity.enums.PostType;
+import com.gollajo.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,5 +63,17 @@ public class Post {
             this.stringOptions.add(stringOption);
         }
     }
-
+    public void mapPostImageOption(Post post,List<String> optionContent,List<String> imageUrls){
+        for(int i=0;i<imageUrls.size();i++){
+            ImageOption imageOption=ImageOption.builder()
+                    .post(post)
+                    .imageUrl(imageUrls.get(i))
+                    .imageContent(optionContent.get(i))
+                    .build();
+            this.imageOptions.add(imageOption);
+        }
+    }
+    public void setPostState(PostState postState){
+        this.postState = postState;
+    }
 }

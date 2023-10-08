@@ -2,10 +2,7 @@ package com.gollajo.domain.account.entity;
 
 import com.gollajo.domain.account.entity.enums.AccountState;
 import com.gollajo.domain.account.entity.enums.AccountType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,4 +39,14 @@ public class AccountBody {
         this.accountState = accountState;
         this.accountType = accountType;
     }
+
+    public void setAccountStateToComplete(){
+        this.accountState = AccountState.COMPLETE;
+    }
+    public void setAccountStateToCancel(){
+        this.accountState = AccountState.CANCEL;
+    }
+
+
+
 }

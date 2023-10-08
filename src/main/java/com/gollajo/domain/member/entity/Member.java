@@ -3,6 +3,7 @@ package com.gollajo.domain.member.entity;
 import com.gollajo.domain.member.entity.enums.Gender;
 import com.gollajo.domain.member.entity.enums.Grade;
 import com.gollajo.domain.member.entity.enums.SocialType;
+import com.gollajo.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,6 +76,10 @@ public class Member {
     }
     public void plusNumOfVoting(){
         this.numOfVoting = this.numOfVoting + 1;
+    }
+
+    public void cancelPoint(int returnAmount){
+        this.point += returnAmount;
     }
 
 }

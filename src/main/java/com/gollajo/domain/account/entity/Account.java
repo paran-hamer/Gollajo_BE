@@ -18,12 +18,12 @@ public class Account {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_member_id")
-    private Member member;
+    @JoinColumn(name = "target_member")
+    private Member targetMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_post_id")
-    private Post post;
+    @JoinColumn(name = "target_post")
+    private Post targetPost;
 
     @Embedded
     private AccountBody accountBody;
@@ -34,7 +34,7 @@ public class Account {
             final Member member,
             final AccountBody accountBody
     ) {
-        this.member = member;
+        this.targetMember = member;
         this.accountBody = accountBody;
     }
 
@@ -45,9 +45,8 @@ public class Account {
             final Post post,
             final AccountBody accountBody
     ) {
-        this.member = member;
-        this.post = post;
+        this.targetMember = member;
+        this.targetPost = post;
         this.accountBody = accountBody;
     }
-
 }

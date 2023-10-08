@@ -2,6 +2,7 @@ package com.gollajo.domain.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.gollajo.domain.post.entity.ImageOption;
 import com.gollajo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,12 @@ public class AmazonS3Service {
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         return "image_" + new Date().getTime() + "_"
                 + UUID.randomUUID().toString().concat(fileExtension);
+    }
+    public void deleteImages(List<ImageOption> imgOptions){
+
+        for(ImageOption imgOption:imgOptions){
+            deleteImage(imgOption.getImageUrl());
+        }
     }
 
     private void deleteImage(String imgUrl){

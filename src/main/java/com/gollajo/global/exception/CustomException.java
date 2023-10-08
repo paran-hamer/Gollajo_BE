@@ -12,7 +12,7 @@ public class CustomException extends RuntimeException{
     ErrorCode errorCode;
 
     @Builder
-    private CustomException(ErrorCode errorCode){
+    public CustomException(ErrorCode errorCode){
         this.errorCode = errorCode;
     }
 

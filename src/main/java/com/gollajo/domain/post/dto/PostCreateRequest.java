@@ -1,8 +1,6 @@
 package com.gollajo.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gollajo.domain.member.entity.Member;
-import com.gollajo.domain.post.entity.enums.PostType;
 import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
 

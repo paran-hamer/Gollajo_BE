@@ -1,6 +1,5 @@
 package com.gollajo.domain.member.dto;
 
-import com.gollajo.domain.member.entity.enums.Grade;
 import com.gollajo.domain.member.entity.enums.SocialType;
 import lombok.Builder;
 

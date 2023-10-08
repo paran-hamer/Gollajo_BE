@@ -85,7 +85,7 @@ public class PostService {
                 .targetPost(post)
                 .build());
 
-
+        //TODO: 반환값을 완성된 투표글 정보를 보여주도록 바꾸기
         return post.getId();
 
     }
@@ -134,6 +134,7 @@ public class PostService {
                 .targetPost(post)
                 .build());
 
+        //TODO: 반환값을 완성된 투표글 정보를 보여주도록 바꾸기
         return post.getId();
     }
 
@@ -155,6 +156,7 @@ public class PostService {
     }
 
     public Long cancelPost(Long postId,Member member){
+
         // 투표글 취소(삭제)처리
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
 

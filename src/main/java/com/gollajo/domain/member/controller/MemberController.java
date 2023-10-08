@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class MemberController {
     @Operation(summary = "포인트 지급하기", description = "해당멤버에게 포인트를 지급한다")
     @ApiResponse(responseCode = "200", description = "포인트 지급 성공")
     @PostMapping("/point")
-    public ResponseEntity<Integer> pointUp(Long targetMemberId,int point){
+    public ResponseEntity<Integer> pointUp(@RequestParam("targetMemberId") Long targetMemberId,@RequestParam("point") int point){
         //TODO : 실제 운영 서버에서는 jwt토큰으로 member불러와서 저장할 예정
         Long memberId = 1L;
         Member adminMember = memberService.findById(memberId);

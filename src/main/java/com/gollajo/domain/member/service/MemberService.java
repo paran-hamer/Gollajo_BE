@@ -43,6 +43,29 @@ public class MemberService {
 
         return memberRepository.findById(memberId).get();
     }
+    public Member saveCancelPostMember(Member member,int plusAmount){
+
+        member.plusPoint(plusAmount);
+
+        memberRepository.save(member);
+        return member;
+    }
+    public Member saveCreatePostMember(Member member,int minusAmount){
+
+        member.minusPoint(minusAmount);
+
+        memberRepository.save(member);
+        return member;
+    }
+
+    public Member saveVotePostMember(Member member,int plusAmount){
+
+        member.plusNumOfVoting();
+        member.plusPoint(plusAmount);
+
+        memberRepository.save(member);
+        return member;
+    }
 
 
 }

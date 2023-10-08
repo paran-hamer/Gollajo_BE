@@ -1,23 +1,16 @@
 package com.gollajo.domain.vote.service;
 
-import com.gollajo.domain.account.entity.Account;
-import com.gollajo.domain.account.entity.AccountBody;
-import com.gollajo.domain.account.entity.enums.AccountState;
-import com.gollajo.domain.account.entity.enums.AccountType;
-import com.gollajo.domain.account.repository.AccountRepository;
-import com.gollajo.domain.exception.CustomException;
-import com.gollajo.domain.exception.ErrorCode;
+import com.gollajo.domain.account.service.AccountService;
 import com.gollajo.domain.exception.handler.VoteExceptionHandler;
 import com.gollajo.domain.member.entity.Member;
-import com.gollajo.domain.member.repository.MemberRepository;
+import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.entity.ImageOption;
 import com.gollajo.domain.post.entity.Post;
 import com.gollajo.domain.post.entity.TextOption;
-import com.gollajo.domain.post.entity.enums.PostState;
 import com.gollajo.domain.post.entity.enums.PostType;
 import com.gollajo.domain.post.repository.ImageOptionRepository;
-import com.gollajo.domain.post.repository.PostRepository;
 import com.gollajo.domain.post.repository.TextOptionRepository;
+import com.gollajo.domain.post.service.PostService;
 import com.gollajo.domain.vote.dto.VoteResultResponse;
 import com.gollajo.domain.vote.entity.Vote;
 import com.gollajo.domain.vote.repository.VoteRepository;
@@ -38,47 +31,33 @@ import java.util.Map;
 public class VoteService {
 
     private final VoteRepository voteRepository;
-    private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
-    private final AccountRepository accountRepository;
+    private final VoteExceptionHandler voteExceptionHandler;
+
     private final TextOptionRepository textOptionRepository;
     private final ImageOptionRepository imageOptionRepository;
 
-    private final VoteExceptionHandler voteExceptionHandler;
+    private final AccountService accountService;
+    private final PostService postService;
+    private final MemberService memberService;
+
+
 
     public List<VoteResultResponse> createVote(Member member, Long postId, Long optionId) {
 
         Post post = voteExceptionHandler.voteException(member, postId, optionId);
 
+        //투표 생성
         Vote vote = makeVote(member, post, optionId);
-
         voteRepository.save(vote);
 
         // 투표글 상태 최신화
-        int maxVotes = post.getPostBody().getMaxVotes();
-        int currentVotes = voteRepository.countByPost(post);
-        if(currentVotes >= maxVotes){
-            post.setPostState(PostState.STATE_COMPLETE);
-            postRepository.save(post);
-        }
+        Post updatedPost = postService.updatePostState(post, voteRepository.countByPost(post));
 
         //투표한 사람에게 포인트 지급
-        member.plusNumOfVoting();
-        member.plusPoint(post.getPostBody().getPointPerVote());
-        memberRepository.save(member);
+        memberService.saveVotePostMember(member, post.getPostBody().getPointPerVote());
 
         //거래내역 작성
-        AccountBody accountBody = AccountBody.builder()
-                .amount(post.getPostBody().getPointPerVote())
-                .memo("Get voting point")
-                .accountState(AccountState.COMPLETE)
-                .accountType(AccountType.DEPOSIT)
-                .build();
-        accountRepository.save(Account.builder()
-                .accountBody(accountBody)
-                .targetMember(member)
-                .targetPost(post)
-                .build());
+        accountService.saveVoteAccount(member, updatedPost);
 
         List<VoteResultResponse> voteResult = getVoteResult(post);
         return voteResult;
@@ -129,6 +108,7 @@ public class VoteService {
                     .postType(post.getPostBody().getPostType())
                     .build());
         }
+
         return result;
     }
 

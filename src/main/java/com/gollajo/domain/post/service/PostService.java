@@ -1,13 +1,9 @@
 package com.gollajo.domain.post.service;
 
 import com.gollajo.domain.account.entity.Account;
-import com.gollajo.domain.account.entity.AccountBody;
-import com.gollajo.domain.account.entity.enums.AccountState;
-import com.gollajo.domain.account.entity.enums.AccountType;
-import com.gollajo.domain.exception.handler.AccountExceptionHandler;
-import com.gollajo.domain.account.repository.AccountRepository;
+import com.gollajo.domain.account.service.AccountService;
 import com.gollajo.domain.member.entity.Member;
-import com.gollajo.domain.member.repository.MemberRepository;
+import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.dto.PostCreateRequest;
 import com.gollajo.domain.post.entity.ImageOption;
 import com.gollajo.domain.post.entity.Post;
@@ -17,8 +13,6 @@ import com.gollajo.domain.post.entity.enums.PostType;
 import com.gollajo.domain.exception.handler.PostExceptionHandler;
 import com.gollajo.domain.post.repository.PostRepository;
 import com.gollajo.domain.s3.AmazonS3Service;
-import com.gollajo.domain.exception.CustomException;
-import com.gollajo.domain.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,58 +26,25 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final AccountRepository accountRepository;
-    private final MemberRepository memberRepository;
+    private final PostExceptionHandler postExceptionHandler;
 
     private final AmazonS3Service amazonS3Service;
-
-    private final PostExceptionHandler postExceptionHandler;
-    private final AccountExceptionHandler accountExceptionHandler;
-
+    private final AccountService accountService;
+    private final MemberService memberService;
 
     public Long createStringPost(PostCreateRequest request, Member member){
 
-        //투표글 생성
-        postExceptionHandler.createPostException(request,member);
-
-        PostBody createdPostBody = PostBody.builder()
-                .postType(PostType.TEXT_OPTION)
-                .title(request.title())
-                .content(request.content())
-                .maxVotes(request.maxVotes())
-                .pointPerVote(request.pointPerVote())
-                .expirationDate(request.expirationDate())
-                .build();
-
-        Post post = Post.builder()
-                .postBody(createdPostBody)
-                .member(member)
-                .postState(PostState.STATE_GENERATING)
-                .build();
-
+        //객관식형 투표글 생성
+        Post post = makePost(request, member,PostType.TEXT_OPTION);
         post.mapPostStringOption(post,request.optionContent());
-
         postRepository.save(post);
 
         //포인트 지불
         int sumAmount = request.maxVotes() * request.pointPerVote();
-
-        member.minusPoint(sumAmount);
-        memberRepository.save(member);
+        memberService.saveCreatePostMember(member, sumAmount);
 
         //거래내역 저장
-        AccountBody accountBody = AccountBody.builder()
-                .amount(sumAmount)
-                .memo("Create textPost")
-                .accountType(AccountType.WITHDRAW)
-                .accountState(AccountState.HOLDING)
-                .build();
-
-        accountRepository.save(Account.builder()
-                .accountBody(accountBody)
-                .targetMember(member)
-                .targetPost(post)
-                .build());
+        accountService.saveCreatePostAccount(member, post, "Create textPost");
 
         //TODO: 반환값을 완성된 투표글 정보를 보여주도록 바꾸기
         return post.getId();
@@ -92,47 +53,20 @@ public class PostService {
 
     public Long createImagePost(PostCreateRequest request, Member member, List<MultipartFile> images){
 
-        postExceptionHandler.createPostException(request,member);
-
-        PostBody createdPostBody = PostBody.builder()
-                .postType(PostType.IMAGE_OPTION)
-                .title(request.title())
-                .content(request.content())
-                .maxVotes(request.maxVotes())
-                .pointPerVote(request.pointPerVote())
-                .expirationDate(request.expirationDate())
-                .build();
-
-        Post post = Post.builder()
-                .postBody(createdPostBody)
-                .member(member)
-                .postState(PostState.STATE_GENERATING)
-                .build();
+        //이미지형 투표글 생성
+        Post post = makePost(request, member,PostType.IMAGE_OPTION);
 
         List<String> imgUrls = amazonS3Service.uploadFiles(images);
-        post.mapPostImageOption(post,request.optionContent(),imgUrls);
 
+        post.mapPostImageOption(post,request.optionContent(),imgUrls);
         postRepository.save(post);
 
         //포인트 지불
         int sumAmount = request.maxVotes() * request.pointPerVote();
-
-        member.minusPoint(sumAmount);
-        memberRepository.save(member);
+        memberService.saveCreatePostMember(member, sumAmount);
 
         //거래내역 저장
-        AccountBody accountBody = AccountBody.builder()
-                .amount(sumAmount)
-                .memo("Create imagePost")
-                .accountType(AccountType.WITHDRAW)
-                .accountState(AccountState.HOLDING)
-                .build();
-
-        accountRepository.save(Account.builder()
-                .accountBody(accountBody)
-                .targetMember(member)
-                .targetPost(post)
-                .build());
+        accountService.saveCreatePostAccount(member, post, "Create imagePost");
 
         //TODO: 반환값을 완성된 투표글 정보를 보여주도록 바꾸기
         return post.getId();
@@ -165,19 +99,47 @@ public class PostService {
         postRepository.delete(post);
 
         // 거래내역 취소처리
-        Account account = accountRepository.findByTargetMemberAndTargetPost(member, post)
-                .orElseThrow(() -> new CustomException(ErrorCode.NO_ACCOuNT_HISTORY));
-
-        accountExceptionHandler.cancelAccountException(account);
-
-        account.getAccountBody().setAccountStateToCancel();
-        accountRepository.save(account);
+        Account account = accountService.saveCancelPostAccount(member, post);
 
         // 환불 처리
-        member.plusPoint(account.getAccountBody().getAmount());
-        memberRepository.save(member);
+        memberService.saveCancelPostMember(member,
+                account.getAccountBody().getAmount());
 
         return post.getId();
+    }
+
+    public Post updatePostState(Post post, int currentVoteCount){
+
+        int maxVoteCount = post.getPostBody().getMaxVotes();
+
+        if(currentVoteCount >=maxVoteCount){
+            post.setPostState(PostState.STATE_COMPLETE);
+            postRepository.save(post);
+        }
+
+        return post;
+    }
+
+    private Post makePost(PostCreateRequest request, Member member,PostType postType){
+
+        postExceptionHandler.createPostException(request,member);
+
+        PostBody createdPostBody = PostBody.builder()
+                .postType(postType)
+                .title(request.title())
+                .content(request.content())
+                .maxVotes(request.maxVotes())
+                .pointPerVote(request.pointPerVote())
+                .expirationDate(request.expirationDate())
+                .build();
+
+        Post post = Post.builder()
+                .postBody(createdPostBody)
+                .member(member)
+                .postState(PostState.STATE_GENERATING)
+                .build();
+
+        return post;
     }
 
 }

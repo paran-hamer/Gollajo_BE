@@ -67,6 +67,8 @@ public class PostService {
 
     public Long createImagePost(PostCreateRequest request, Member member, List<MultipartFile> images){
 
+        postExceptionHandler.createPostException(request,member);
+
         PostBody createdPostBody = PostBody.builder()
                 .postType(PostType.IMAGE_OPTION)
                 .title(request.title())

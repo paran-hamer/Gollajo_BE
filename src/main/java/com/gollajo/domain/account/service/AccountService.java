@@ -36,6 +36,7 @@ public class AccountService {
         return accountList;
     }
 
+    // 투표글 생성시 거래내역 만들고 저장하는 함수
     public Account saveCreatePostAccount(Member member, Post post, String memo) {
 
         int sumAmount = post.getPostBody().getPointPerVote()
@@ -58,6 +59,7 @@ public class AccountService {
         return account;
     }
 
+    //투표글 취소시 거래내역을 취소로 변경 후 저장하는 함수
     public Account saveCancelPostAccount(Member member,Post post){
 
         Account account = accountRepository.findByTargetMemberAndTargetPost(member, post)
@@ -71,6 +73,7 @@ public class AccountService {
         return account;
     }
 
+    //투표시 투표를 통한 포인트 거래내역을 기록 후 저장하는 함수
     public Account saveVoteAccount(Member member,Post post){
         AccountBody accountBody = AccountBody.builder()
                 .amount(post.getPostBody().getPointPerVote())
@@ -88,4 +91,22 @@ public class AccountService {
         accountRepository.save(account);
         return account;
     }
+
+    public Account savePaymentAccount(Member member,int amount){
+        AccountBody accountBody = AccountBody.builder()
+                .amount(amount)
+                .memo("Payment point")
+                .accountState(AccountState.COMPLETE)
+                .accountType(AccountType.DEPOSIT)
+                .build();
+
+        Account account = Account.builder()
+                .accountBody(accountBody)
+                .targetMember(member)
+                .build();
+
+        accountRepository.save(account);
+        return account;
+    }
+
 }

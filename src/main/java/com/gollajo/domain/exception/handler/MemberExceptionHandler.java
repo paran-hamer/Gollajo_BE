@@ -1,6 +1,7 @@
 package com.gollajo.domain.exception.handler;
 
 import com.gollajo.domain.member.dto.CreateMemberRequest;
+import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.repository.MemberRepository;
 import com.gollajo.domain.exception.CustomException;
 import com.gollajo.domain.exception.ErrorCode;
@@ -30,4 +31,5 @@ public class MemberExceptionHandler {
             throw new CustomException(ErrorCode.NO_MEMBER_BY_MEMBER_ID);
         }
     }
+
 }

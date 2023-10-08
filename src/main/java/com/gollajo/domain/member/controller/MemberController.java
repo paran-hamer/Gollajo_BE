@@ -3,6 +3,7 @@ package com.gollajo.domain.member.controller;
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.service.AccountService;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
+import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +36,18 @@ public class MemberController {
         List<Account> accounts = accountService.showMyAccount();
 
         return ResponseEntity.ok(accounts);
+    }
+
+    @PostMapping("/point")
+    public ResponseEntity<Integer> pointUp(Long targetMemberId,int point){
+        //TODO : 실제 운영 서버에서는 jwt토큰으로 member불러와서 저장할 예정
+        Long memberId = 1L;
+        Member adminMember = memberService.findById(memberId);
+
+        Member targetMember = memberService.findById(targetMemberId);
+
+        int currentPoint = memberService.savePaymentMember(adminMember,targetMember, point);
+
+        return new ResponseEntity<>(currentPoint, HttpStatus.OK);
     }
 }

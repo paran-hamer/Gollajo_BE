@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 @Slf4j
 public class ScheduleService {
@@ -28,7 +28,7 @@ public class ScheduleService {
 
     @Scheduled(fixedRate = 60000)
     @Modifying
-    @Transactional(readOnly = true)
+    @Transactional
     public void updatePostState(){
 
         List<Post> posts = postRepository.findAll();
@@ -41,17 +41,23 @@ public class ScheduleService {
             LocalDateTime expirationTime = createdAt.plusMinutes(2);
 
             // 현재시간과 생성된 시간을 비교하여 투표글의 상태를 업데이트
-            if (currentTime.isAfter(expirationTime)) {
-                log.info("VoteStatus UPDATE: GENERATING -> HOLDING");
+            if (currentTime.isAfter(expirationTime) &&
+                    post.getPostState() == PostState.STATE_GENERATING) {
+
+                log.info("VoteStatus UPDATE: GENERATING -> PROCEEDING");
+
                 post.setPostState(PostState.STATE_PROCEEDING);
                 postRepository.save(post);
+
+                log.info(post.getPostState().toString());
+
                 List<Account> allAccount = accountRepository.findByTargetMember(post.getMember());
                 // 해당하는 거래내역 갱신
                 for (Account account : allAccount) {
                     if (account.getAccountBody().getAccountType() == AccountType.WITHDRAW &&
                             account.getAccountBody().getAccountState() == AccountState.HOLDING) {
                         account.getAccountBody().setAccountStateToComplete();
-                        accountRepository.save(account);
+                        accountRepository.saveAndFlush(account);
                     }
                 }
             }

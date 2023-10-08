@@ -42,7 +42,7 @@ public class ScheduleService {
 
             // 현재시간과 생성된 시간을 비교하여 투표글의 상태를 업데이트
             if (currentTime.isAfter(expirationTime)) {
-                log.info("VoteStatus UPDATE: GENERATING -> CONTINUE");
+                log.info("VoteStatus UPDATE: GENERATING -> HOLDING");
                 post.setPostState(PostState.STATE_PROCEEDING);
                 postRepository.save(post);
                 List<Account> allAccount = accountRepository.findByTargetMember(post.getMember());

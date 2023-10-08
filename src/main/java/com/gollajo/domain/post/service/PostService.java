@@ -174,6 +174,7 @@ public class PostService {
     }
 
     //투표글의 maxVotes가 다 칬을 때 투표글 상태 COMPLETE로 업데이트
+    //스프링빈의 순환참조로 인해 voteService에서 이용불가
     public Post updatePostState(Post post, int currentVoteCount){
 
         int maxVoteCount = post.getPostBody().getMaxVotes();

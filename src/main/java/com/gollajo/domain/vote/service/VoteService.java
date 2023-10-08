@@ -7,8 +7,10 @@ import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.entity.ImageOption;
 import com.gollajo.domain.post.entity.Post;
 import com.gollajo.domain.post.entity.TextOption;
+import com.gollajo.domain.post.entity.enums.PostState;
 import com.gollajo.domain.post.entity.enums.PostType;
 import com.gollajo.domain.post.repository.ImageOptionRepository;
+import com.gollajo.domain.post.repository.PostRepository;
 import com.gollajo.domain.post.repository.TextOptionRepository;
 import com.gollajo.domain.post.service.PostService;
 import com.gollajo.domain.vote.dto.VoteResultResponse;
@@ -37,7 +39,8 @@ public class VoteService {
     private final ImageOptionRepository imageOptionRepository;
 
     private final AccountService accountService;
-    private final PostService postService;
+    private final PostRepository postRepository;
+//    private final PostService postService; 스프링빈 순환 참고로 인해 의존성 삭제
     private final MemberService memberService;
 
 
@@ -51,13 +54,20 @@ public class VoteService {
         voteRepository.save(vote);
 
         // 투표글 상태 최신화
-        Post updatedPost = postService.updatePostState(post, voteRepository.countByPost(post));
+        int currentVoteCount = voteRepository.countByPost(post);
+        int maxVoteCount = post.getPostBody().getMaxVotes();
+
+        if(currentVoteCount >=maxVoteCount){
+            post.setPostState(PostState.STATE_COMPLETE);
+            postRepository.save(post);
+        }
+
 
         //투표한 사람에게 포인트 지급
         memberService.saveVotePostMember(member, post.getPostBody().getPointPerVote());
 
         //거래내역 작성
-        accountService.saveVoteAccount(member, updatedPost);
+        accountService.saveVoteAccount(member, post);
 
         List<VoteResultResponse> voteResult = getVoteResult(post);
         return voteResult;

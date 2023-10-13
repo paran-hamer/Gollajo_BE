@@ -1,5 +1,6 @@
 package com.gollajo.domain.auth.controller;
 
+import com.gollajo.domain.auth.dto.LoginResponse;
 import com.gollajo.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/kakao/callback")
-    public ResponseEntity<Void> loginByKakao(@RequestParam("code") String code) {
+    public ResponseEntity<LoginResponse> loginByKakao(@RequestParam("code") String code) {
 
-        authService.register(code);
+        String token = authService.register(code);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponse(token),HttpStatus.OK);
     }
 
 }

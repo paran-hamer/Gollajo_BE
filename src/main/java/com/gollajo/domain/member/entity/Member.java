@@ -99,6 +99,7 @@ public class Member extends BaseTimeEntity {
                 .point(0)
                 .grade(Grade.LV1)
                 .numOfVoting(0)
+                .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
                 .build();
     }
 }

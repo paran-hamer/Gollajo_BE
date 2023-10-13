@@ -21,6 +21,8 @@ public class PostExceptionHandler {
     private static final int CONTENT_LENGTH=30;         // 제목,내용 길이 제한
     private static final int MINIMuM_SETUP_TIME = 10;   // 최소 설정 시간
 
+    //TODO: createPostException 추가하기
+
     public Post deletePostException(Member member, Long postId){
         //존재하는 투표글인지 확인
         Post post = postRepository.findById(postId)

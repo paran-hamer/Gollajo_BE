@@ -17,7 +17,7 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final List<String> ALLOWED_LIST = List.of(
-            "/health-check",
+            "/test",
             "/auth/kakao/callback"
     );
 

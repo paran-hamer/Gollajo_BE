@@ -17,12 +17,12 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class TokenProcess {
+public class TokenProcessor {
 
     private final Key key;
     private final int tokenExpirationTime;
 
-    public TokenProcess(
+    public TokenProcessor(
             @Value("${jwt.token.secret-key}") final String secretKey,
             @Value("${jwt.token.expiration-time}") final int tokenExpirationTime)
     {

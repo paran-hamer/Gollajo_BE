@@ -1,7 +1,7 @@
 package com.gollajo.domain.auth.service;
 
 import com.gollajo.domain.auth.dto.KakaoMemberResponse;
-import com.gollajo.domain.jwt.TokenProcess;
+import com.gollajo.domain.jwt.TokenProcessor;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ public class AuthService {
 
     private final KakaoOAuthClient kakaoOAuthClient;
     private final MemberService memberService;
-    private final TokenProcess tokenProcess;
+    private final TokenProcessor tokenProcessor;
 
     public String register(final String code) {
 
@@ -23,7 +23,7 @@ public class AuthService {
         final Member member = Member.createKakaoMember(response);
         final Member registeredMember = memberService.register(member);
 
-        return tokenProcess.generateToken(registeredMember);
+        return tokenProcessor.generateToken(registeredMember);
 
     }
 }

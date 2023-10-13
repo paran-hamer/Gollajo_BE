@@ -2,6 +2,8 @@ package com.gollajo.domain.member.service;
 
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.service.AccountService;
+import com.gollajo.domain.exception.CustomException;
+import com.gollajo.domain.exception.ErrorCode;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.entity.enums.Grade;
@@ -11,6 +13,8 @@ import com.gollajo.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -22,11 +26,19 @@ public class MemberService {
 
     private final AccountService accountService;
 
+    public Member register(final Member member){
+
+        final Member maybeMember = memberRepository.findBySocialIdAndSocialType(member.getSocialId(), member.getSocialType())
+                .orElseThrow(()-> new CustomException(ErrorCode.NO_MEMBER));
+
+        return maybeMember;
+    }
+
     public String signUp(CreateMemberRequest request){
 
         memberExceptionHandler.signUpException(request);
 
-        Member member = Member.builder()
+        final Member member = Member.builder()
                 .email(request.email())
                 .nickname(request.nickname())
                 .socialType(request.socialType())

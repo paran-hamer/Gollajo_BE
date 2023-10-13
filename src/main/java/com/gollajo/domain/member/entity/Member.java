@@ -1,5 +1,6 @@
 package com.gollajo.domain.member.entity;
 
+import com.gollajo.domain.auth.dto.KakaoMemberResponse;
 import com.gollajo.domain.member.entity.enums.Gender;
 import com.gollajo.domain.member.entity.enums.Grade;
 import com.gollajo.domain.member.entity.enums.SocialType;
@@ -84,5 +85,20 @@ public class Member extends BaseTimeEntity {
 
     public void minusPoint(int returnAmount){
         this.point -= returnAmount;
+    }
+
+    public static Member createKakaoMember(final KakaoMemberResponse response){
+
+        final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
+
+        return Member.builder()
+                .email(response.kakaoAccount().email())
+                .nickname("익명의 사용자" + nicknameNumberGenerator.generate())
+                .socialType(SocialType.KAKAO)
+                .socialId(response.id().toString())
+                .point(0)
+                .grade(Grade.LV1)
+                .numOfVoting(0)
+                .build();
     }
 }

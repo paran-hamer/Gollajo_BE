@@ -4,9 +4,12 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
+
     //인증예외(1번대)
     NO_AUTHORITY(HttpStatus.BAD_REQUEST, 100, "권한 없습니다."),
+
     //유저예외(2번대
+    NO_MEMBER(HttpStatus.BAD_REQUEST, 200, "멤버가 아닙니다."),
     NO_USERNAME(HttpStatus.BAD_REQUEST, 201,"닉네임은 필수입니다."),
     NO_EMAIL(HttpStatus.BAD_REQUEST,202,"이메일은 필수입니다."),
     NO_EMAIL_FROM_KAKAO(HttpStatus.BAD_REQUEST,203,"카카오에서 이메일 불러오기 실패"),
@@ -28,7 +31,6 @@ public enum ErrorCode {
     TOO_LONG_OPTION_LENGTH(HttpStatus.BAD_REQUEST,312,"보기옵션의 길이가 너무 깁니다."),
     WRONG_DEADLINE(HttpStatus.BAD_REQUEST, 313,"마감날짜가 너무 빠릅니다. 최소 10분 이상으로 설정해주세요."),
     NO_MATCH_SIZE_IMG_OPTION_AND_IMG_URL(HttpStatus.BAD_REQUEST, 314,"이미지 갯수와 이미지 옵션의 갯수가 다릅니다"),
-
 
     //투표 예외(4번대
     DUPLICATE_VOTE(HttpStatus.BAD_REQUEST, 401,"이미 투표를 한 사람입니다."),

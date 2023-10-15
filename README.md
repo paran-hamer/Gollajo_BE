@@ -13,3 +13,8 @@
 - 영속성으로 Member.build()해도 기존 member객체가 불러와지는지 새 객체가 생성되는지 확인
 
 ### 3. OAuth, JWT, 인가 구현하기..
+
+### 4. 피드백
+- service 인터페이스 상속받아서 구현하기(확정성 측면)
+- 서비스의 리턴값도 dto로 관리하기
+- scheduling 관련 투표글 상태 업데이트를 DB에서 처리하는 법 알아보기 + for문보다 stream 이용해보기, save() 안해도 저장됨(@Transitional)

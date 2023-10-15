@@ -35,7 +35,7 @@ oauth:
       redirect-info: http://localhost:8080/oauth/kakao/callback
 jwt:
   token:
-    secret-key: hamerisgoodhamersogoodhamergood
+    secret-key: hamerisgoodhamersogoodhamergoods
     expiration-time: 1800000
 gollajo:
   openapi:

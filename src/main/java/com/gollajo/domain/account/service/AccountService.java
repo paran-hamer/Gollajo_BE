@@ -109,4 +109,24 @@ public class AccountService {
         return account;
     }
 
+    public void updateAccountState(Post post){
+
+        final List<Account> allCount = accountRepository.findByTargetMember(post.getMember());
+
+
+        for (Account account : allCount) {
+
+            final AccountType accountType = account.getAccountBody().getAccountType();
+            final AccountState accountState = account.getAccountBody().getAccountState();
+
+            if (accountType == AccountType.WITHDRAW &&
+                    accountState == AccountState.HOLDING) {
+
+                account.getAccountBody().setAccountStateToComplete();
+                accountRepository.saveAndFlush(account);
+
+            }
+        }
+    }
+
 }

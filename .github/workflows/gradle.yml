@@ -55,8 +55,8 @@ jobs:
         username: ubuntu
         key: ${{ gollajogollajo }}
         envs: GITHUB_SHA
-      run:
-        sudo docker rm -f $(docker ps -qa)
-        sudo docker pull ${{ gollajo }}/directors-dev
-        docker-compose up -d
-        docker image prune -f
+#      run:
+#        sudo docker rm -f $(docker ps -qa)
+#        sudo docker pull ${{ gollajo }}/directors-dev
+#        docker-compose up -d
+#        docker image prune -f

@@ -33,7 +33,7 @@ jobs:
       run: |
           cd ./src/main/resources
           touch ./application.properties
-          echo "${{ gollajoBE }}" > ./application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties
       shell: bash
       
     - name: Build with Gradle
@@ -43,20 +43,20 @@ jobs:
           
     - name: Docker build & push to docker repo
       run: |
-          docker login -u ${{ hamer }} -p ${{ dkwneo1234 }}
-          docker build -f Dockerfile -t ${{ gollajo }}/directors-dev .
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD}}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/directors-dev .
           docker push ${{ secrets.DOCKER_REPO }}/directors-dev
 
     - name: Deploy to server
       uses: appleboy/ssh-action@master
       id: deploy
       with:
-        host: ${{ hamer }}
+        host: ${{ secrets.HOST }}
         username: ubuntu
-        key: ${{ gollajogollajo }}
+        key: ${{ secrets.KEY }}
         envs: GITHUB_SHA
 #      run:
 #        sudo docker rm -f $(docker ps -qa)
-#        sudo docker pull ${{ gollajo }}/directors-dev
+#        sudo docker pull ${{ secrets.DOCKER_REPO }}/directors-dev
 #        docker-compose up -d
 #        docker image prune -f

@@ -60,6 +60,18 @@ public class MemberService {
         return memberRepository.findById(memberId).get();
     }
 
+    public boolean existsByEmail(String email){
+
+        return memberRepository.existsByEmail(email);
+    }
+
+    public Member findByEmail(String email){
+
+        memberExceptionHandler.findByEmailException(email);
+
+        return memberRepository.findByEmail(email).get();
+    }
+
     //내 정보를 업데이트 한다.
     public Member update(CreateMemberRequest request){
 

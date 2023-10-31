@@ -2,12 +2,11 @@ package com.gollajo.domain.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
+@Builder
 public record OauthAccessTokenResponse (
         @JsonProperty("token_type") String tokenType,
         @JsonProperty("access_token") String accessToken,

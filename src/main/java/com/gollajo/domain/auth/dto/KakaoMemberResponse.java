@@ -10,8 +10,10 @@ public record KakaoMemberResponse (
             @JsonProperty("email") String email,
             @JsonProperty("age_range") String ageRange,
             @JsonProperty("birthday") String birthday,
-            @JsonProperty("gender") String gender
+            @JsonProperty("gender") String gender,
+            @JsonProperty("profile") Profile profile
     ){
+        public record Profile(@JsonProperty("nickname") String nickname){}
 
     }
 }

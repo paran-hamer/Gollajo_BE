@@ -32,4 +32,12 @@ public class MemberExceptionHandler {
         }
     }
 
+    public void findByEmailException(String email){
+
+        if(!memberRepository.existsByEmail(email)){
+            throw new CustomException(ErrorCode.NO_MEMBER);
+        }
+
+    }
+
 }

@@ -27,7 +27,6 @@ public class ScheduleService {
 
     private final PostRepository postRepository;
     private final PostService postService;
-    private final AccountService accountService;
 
     @Scheduled(fixedRate = 60000)
     @Modifying

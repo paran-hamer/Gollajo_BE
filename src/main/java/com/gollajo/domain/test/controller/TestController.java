@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +22,10 @@ public class TestController {
     @Operation(summary = "testAPI", description = "API를 테스트한다.")
     @ApiResponse(responseCode = "200", description = "테스트 성공")
     @GetMapping
-    public ResponseEntity<String> test(){
+    public ResponseEntity<String> test(@CookieValue(name = "memberId", required = false)Long memberId){
+        log.info(Long.toString(memberId));
         final String testMessage = testService.test();
-        return ResponseEntity.ok(testMessage);
+        return ResponseEntity.ok("testMessage:"+Long.toString(memberId));
     }
 
 }

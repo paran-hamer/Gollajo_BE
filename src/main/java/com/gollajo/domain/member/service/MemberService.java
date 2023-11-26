@@ -128,6 +128,10 @@ public class MemberService {
 
         //TODO : adminMember가 운영자권한인지 확인해서 아니면 예외처리하기
 
+        if(adminMember.getId()!=1L){
+            throw new CustomException(ErrorCode.NO_AUTHORITY);
+        }
+
         targetMember.plusPoint(amount);
         memberRepository.save(targetMember);
 

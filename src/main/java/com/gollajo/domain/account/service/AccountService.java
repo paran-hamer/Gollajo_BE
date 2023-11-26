@@ -28,9 +28,8 @@ public class AccountService {
 
     private final AccountExceptionHandler accountExceptionHandler;
 
-    public List<Account> showMyAccount() {
+    public List<Account> showMyAccount(Long memberId) {
         //TODO: 실제론 jwt토큰으로 memberId를 받아옴, 추후 삭제 필요
-        Long memberId = 1L;
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException(ErrorCode.NO_MEMBER_BY_MEMBER_ID));
         List<Account> accountList = accountRepository.findByTargetMember(member);
         return accountList;

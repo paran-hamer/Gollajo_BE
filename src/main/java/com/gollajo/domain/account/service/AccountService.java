@@ -1,5 +1,6 @@
 package com.gollajo.domain.account.service;
 
+import com.gollajo.domain.account.dto.AccountResponse;
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.entity.AccountBody;
 import com.gollajo.domain.account.entity.enums.AccountState;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -107,7 +109,34 @@ public class AccountService {
         accountRepository.save(account);
         return account;
     }
-
+    public List<AccountResponse> transferAccountResponse(List<Account> accounts){
+        List<AccountResponse> accountResponses = new ArrayList<>();
+        for(Account account:accounts){
+            if(account.getTargetPost()==null){
+                AccountResponse accountResponse = AccountResponse.builder()
+                        .accountId(account.getId())
+                        .targetMember(account.getTargetMember().getId())
+                        .accountType(account.getAccountBody().getAccountType())
+                        .accountState(account.getAccountBody().getAccountState())
+                        .amount(account.getAccountBody().getAmount())
+                        .memo(account.getAccountBody().getMemo())
+                        .build();
+                accountResponses.add(accountResponse);
+            }else{
+                AccountResponse accountResponse = AccountResponse.builder()
+                        .accountId(account.getId())
+                        .targetMember(account.getTargetMember().getId())
+                        .targetPost(account.getTargetPost().getId())
+                        .accountType(account.getAccountBody().getAccountType())
+                        .accountState(account.getAccountBody().getAccountState())
+                        .amount(account.getAccountBody().getAmount())
+                        .memo(account.getAccountBody().getMemo())
+                        .build();
+                accountResponses.add(accountResponse);
+            }
+        }
+        return accountResponses;
+    }
     public void updateAccountState(Post post){
 
         final List<Account> allCount = accountRepository.findByTargetMember(post.getMember());

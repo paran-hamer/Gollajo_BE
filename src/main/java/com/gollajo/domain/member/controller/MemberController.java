@@ -1,5 +1,6 @@
 package com.gollajo.domain.member.controller;
 
+import com.gollajo.domain.account.dto.AccountResponse;
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.service.AccountService;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
@@ -35,11 +36,13 @@ public class MemberController {
     @Operation(summary = "거래내역 조회하기", description = "모든 거래내역을 조회한다.")
     @ApiResponse(responseCode = "200", description = "거래내역 조회 성공")
     @GetMapping("/myAccount")
-    public ResponseEntity<List<Account>> showMyAccountList(@CookieValue(name="memberId", required = false)Long memberId){
-        log.info(memberId.toString());
+    public ResponseEntity<List<AccountResponse>> showMyAccountList(@CookieValue(name="memberId", required = false)Long memberId){
+
         List<Account> accounts = accountService.showMyAccount(memberId);
 
-        return ResponseEntity.ok(accounts);
+        List<AccountResponse> accountResponses = accountService.transferAccountResponse(accounts);
+
+        return new ResponseEntity<>(accountResponses, HttpStatus.OK);
     }
 
 

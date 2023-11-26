@@ -11,6 +11,7 @@ import com.gollajo.domain.exception.handler.MemberExceptionHandler;
 import com.gollajo.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 @Service
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -28,10 +30,13 @@ public class MemberService {
 
     public Member register(final Member member){
 
-        final Member maybeMember = memberRepository.findBySocialIdAndSocialType(member.getSocialId(), member.getSocialType())
-                .orElseThrow(()-> new CustomException(ErrorCode.NO_MEMBER));
+//        final Member maybeMember = memberRepository.findBySocialIdAndSocialType(member.getSocialId(), member.getSocialType())
+//                .orElseThrow(()-> new CustomException(ErrorCode.NO_MEMBER));
 
-        return maybeMember;
+        log.info("멤버를 저장하러 옴");
+        Member savedMember = memberRepository.save(member);
+        log.info("저장됨");
+        return savedMember;
     }
 
     public String signUp(CreateMemberRequest request){
@@ -122,6 +127,10 @@ public class MemberService {
     public int savePaymentMember(Member adminMember,Member targetMember,int amount){
 
         //TODO : adminMember가 운영자권한인지 확인해서 아니면 예외처리하기
+
+        if(adminMember.getId()!=1L){
+            throw new CustomException(ErrorCode.NO_AUTHORITY);
+        }
 
         targetMember.plusPoint(amount);
         memberRepository.save(targetMember);

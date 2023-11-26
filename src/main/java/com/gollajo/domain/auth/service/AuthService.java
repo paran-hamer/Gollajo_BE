@@ -6,10 +6,14 @@ import com.gollajo.domain.exception.ErrorCode;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
+@Slf4j
 public class AuthService {
 
     private final KakaoOAuthClient kakaoOAuthClient;
@@ -23,14 +27,12 @@ public class AuthService {
 
         boolean isMember = checkIsMember(memberEmail);
 
-        //TODO: 이메일이 DB에 존재하면 로그인 처리
         if(isMember){
             Member alreadyJoinMember = memberService.findByEmail(memberEmail);
             return alreadyJoinMember.getId();
         }
-        //TODO: 이메일이 DB에 존재하지 않으면 가입처리
         else{
-            final Member member = Member.createKakaoMember(response);
+            Member member = Member.createKakaoMember(response);
             final Member registeredMember = memberService.register(member);
             return registeredMember.getId();
         }

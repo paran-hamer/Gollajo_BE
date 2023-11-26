@@ -36,7 +36,7 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "거래내역 조회 성공")
     @GetMapping("/myAccount")
     public ResponseEntity<List<Account>> showMyAccountList(@CookieValue(name="memberId", required = false)Long memberId){
-        log.info(memberId.toString());
+
         List<Account> accounts = accountService.showMyAccount(memberId);
 
         return ResponseEntity.ok(accounts);

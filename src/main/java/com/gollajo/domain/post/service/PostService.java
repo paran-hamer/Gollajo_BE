@@ -21,6 +21,7 @@ import com.gollajo.domain.post.repository.TextOptionRepository;
 import com.gollajo.domain.s3.AmazonS3Service;
 import com.gollajo.domain.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Service
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -281,6 +283,48 @@ public class PostService {
         }
 
         return result;
+    }
+
+    public void updateProceed(Post post){
+
+        final LocalDateTime currentTime = LocalDateTime.now();
+        final LocalDateTime expirationTime = post.getCreatedAt().plusMinutes(5);
+
+        if (currentTime.isAfter(expirationTime) &&
+                post.getPostState() == PostState.STATE_GENERATING) {
+
+            log.info("VoteStatus UPDATE: GENERATING -> PROCEEDING");
+
+            post.setPostState(PostState.STATE_PROCEEDING);
+            postRepository.save(post);
+
+            //해당하는 거래내역도 최신화
+            accountService.updateAccountState(post);
+
+        }
+
+    }
+
+    public void checkExpired(Post post){
+
+        final LocalDateTime currentTime = LocalDateTime.now();
+        final LocalDateTime expirationTime = post.getPostBody().getExpirationDate();
+
+        if(currentTime.isAfter(expirationTime)){
+
+            if (post.getPostState() == PostState.STATE_COMPLETE) {
+
+                post.setPostState(PostState.STATE_EXPIRED_AND_COMPLETE);
+
+            }else{
+
+                post.setPostState(PostState.STATE_EXPIRED_AND_NO_COMPLETE);
+
+            }
+            postRepository.save(post);
+
+        }
+
     }
 
 }

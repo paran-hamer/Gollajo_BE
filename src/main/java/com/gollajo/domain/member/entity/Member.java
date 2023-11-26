@@ -93,13 +93,17 @@ public class Member extends BaseTimeEntity {
 
         return Member.builder()
                 .email(response.kakaoAccount().email())
-                .nickname("익명의 사용자" + nicknameNumberGenerator.generate())
+//                .nickname("익명의 사용자" + nicknameNumberGenerator.generate())
+                .nickname(response.kakaoAccount().profile().nickname())
                 .socialType(SocialType.KAKAO)
                 .socialId(response.id().toString())
                 .point(0)
+                .age(0)
                 .grade(Grade.LV1)
                 .numOfVoting(0)
                 .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
                 .build();
     }
+
+
 }

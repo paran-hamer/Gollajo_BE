@@ -90,7 +90,10 @@ public class Member extends BaseTimeEntity {
     public static Member createKakaoMember(final KakaoMemberResponse response){
 
         final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
-
+        Gender optionalGender = null;
+        if(response.kakaoAccount().gender()!=null){
+            optionalGender = Gender.valueOf(response.kakaoAccount().gender().toUpperCase());
+        }
         return Member.builder()
                 .email(response.kakaoAccount().email())
 //                .nickname("익명의 사용자" + nicknameNumberGenerator.generate())
@@ -101,7 +104,7 @@ public class Member extends BaseTimeEntity {
                 .age(0)
                 .grade(Grade.LV1)
                 .numOfVoting(0)
-                .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
+                .gender(optionalGender)
                 .build();
     }
 

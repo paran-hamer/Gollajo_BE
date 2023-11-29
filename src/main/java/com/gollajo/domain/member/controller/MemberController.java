@@ -49,7 +49,7 @@ public class MemberController {
     @Operation(summary = "포인트 지급하기", description = "해당멤버에게 포인트를 지급한다")
     @ApiResponse(responseCode = "200", description = "포인트 지급 성공")
     @PostMapping("/point")
-    public ResponseEntity<Integer> pointUp(@RequestParam("targetMemberId") long targetMemberId,
+    public ResponseEntity<Integer> pointUp(@RequestParam("targetMemberId") Long targetMemberId,
                                            @RequestParam("point") int point,
                                            @CookieValue(name="memberId", required = false)Long memberId){
         Member adminMember = memberService.findById(memberId);

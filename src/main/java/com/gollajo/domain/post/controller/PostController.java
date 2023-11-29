@@ -96,9 +96,10 @@ public class PostController {
 
     }
 
+    //TODO: 지금 투표랑 곂쳐서 안됨
     @Operation(summary = "투표글 상세조회하기", description = "투표글에 대한 상세조회한다.")
     @ApiResponse(responseCode = "200", description = "상세조회 성공")
-    @GetMapping("/{postId}")
+    @GetMapping("/show/{postId}")
     public ResponseEntity<PostInfoResponse> showPostInfo(@PathVariable Long postId){
         PostInfoResponse postInfoResponse = postService.showPostInfo(postId);
         return new ResponseEntity<>(postInfoResponse,HttpStatus.OK);

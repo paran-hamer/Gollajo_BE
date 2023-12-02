@@ -33,7 +33,7 @@ public class KakaoOAuthClient {
         //TODO: 이 값 숨겨야됨.
         this.params.add("grant_type", "authorization_code");
         this.params.add("client_id", "8b4a681f5fac9ed686cd100ad58313a0");
-        this.params.add("redirect_uri", "http://gollajo-app.com:8080/auth/kakao/callback");
+        this.params.add("redirect_uri", "http://localhost:3000/oauth");
 
         this.headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
         this.headers.add(HttpHeaders.ACCEPT,"application/json");

@@ -22,6 +22,7 @@ public class AuthService {
     public Long register(final String code) {
 
         final String accessToken = kakaoOAuthClient.getAccessToken(code);
+
         final KakaoMemberResponse response = kakaoOAuthClient.getMemberInfo(accessToken);
         final String memberEmail = response.kakaoAccount().email();
 

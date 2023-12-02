@@ -12,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Enumeration;
 
@@ -26,13 +23,13 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @CrossOrigin(originPatterns = "http://localhost:3000")
     @GetMapping("/auth/kakao/callback")
     public ResponseEntity<LoginResponse> loginByKakao(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) {
 
         //TODO: 처음화면에서 쿠키값가 세션확인하는 API를 만들고 만약 이미 쿠키에 값이 있고 이것이 올바른 값이라면 이 로그인창말고 로그인처리,
         //TODO: 만약 없다면 이 창을 통해 회원이라면 로그인시키고(세션에 저장,쿠키값 넘김), 회원이 아니라면 회원가입후 로그인(세션에 저장,쿠키값넘김)
         //TODO: 로그아웃시 세션에 있던 내용을 삭제시켜주기
-
         Long registerMemberId = authService.register(code);
 
         HttpSession session = request.getSession();
@@ -41,7 +38,7 @@ public class AuthController {
 
         Cookie cookie = new Cookie("memberId", String.valueOf(registerMemberId));
         cookie.setMaxAge(60*60*1);
-        cookie.setPath("/");
+        cookie.setPath("/votes");
         response.addCookie(cookie);
 
         return new ResponseEntity<>(new LoginResponse("성공"),HttpStatus.OK);

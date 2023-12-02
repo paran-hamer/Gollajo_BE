@@ -107,7 +107,7 @@ public class PostController {
 
     @Operation(summary = "투표글에 투표하기", description = "투표글에 해당옵션으로 투표한다.")
     @ApiResponse(responseCode = "200", description = "투표 성공")
-    @GetMapping("/{postId}/vote/{optionId}")
+    @GetMapping("/vote/{postId}/{optionId}")
     public ResponseEntity<List<VoteResultResponse>> vote
             (@CookieValue(name="memberId", required = false)Long memberId,
              @PathVariable Long postId,

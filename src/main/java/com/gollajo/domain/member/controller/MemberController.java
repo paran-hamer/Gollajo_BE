@@ -80,7 +80,7 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "정보조회 성공")
     @GetMapping("/my-page")
     public ResponseEntity<Member> showMyPage(@CookieValue(name="memberId", required = false)Long memberId){
-
+        log.info("쿠키값이 들어왔는지 확인:memberID:{}", memberId);
         Member member = memberService.findById(memberId);
 
         //TODO : 내 정보보기에서 Dto를 따로 만들지 고민중

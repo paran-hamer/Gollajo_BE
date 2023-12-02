@@ -90,7 +90,7 @@ public class PostExceptionHandler {
                 .orElseThrow(() -> new CustomException(ErrorCode.NO_VOTE_ID));
 
         //생성중인 투표글이면 예외처리
-        if(post.getPostState()!=PostState.STATE_GENERATING){
+        if(post.getPostState()==PostState.STATE_GENERATING){
             throw new CustomException(ErrorCode.NO_ING_VOTE);
         }
 

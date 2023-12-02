@@ -11,10 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Enumeration;
+
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,7 +26,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @CrossOrigin(originPatterns = "http://localhost:3000")
     @GetMapping("/auth/kakao/callback")
     public ResponseEntity<LoginResponse> loginByKakao(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) {
 
@@ -32,14 +34,22 @@ public class AuthController {
         //TODO: 로그아웃시 세션에 있던 내용을 삭제시켜주기
         Long registerMemberId = authService.register(code);
 
-        HttpSession session = request.getSession();
-        session.setAttribute("memberId",registerMemberId);
-        session.setMaxInactiveInterval(1800);
+//        HttpSession session = request.getSession();
+//        session.setAttribute("memberId",registerMemberId);
+//        session.setMaxInactiveInterval(1800);
 
-        Cookie cookie = new Cookie("memberId", String.valueOf(registerMemberId));
-        cookie.setMaxAge(60*60*1);
-        cookie.setPath("/votes");
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("memberId", String.valueOf(registerMemberId))
+                .maxAge(60 * 60 * 1)
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .build();
+        response.addHeader(SET_COOKIE,cookie.toString());
+//        Cookie cookie = new Cookie("memberId", String.valueOf(registerMemberId));
+//        cookie.setMaxAge(60*60*1);
+//        cookie.setPath("/");
+//        response.addCookie(cookie);
 
         return new ResponseEntity<>(new LoginResponse("성공"),HttpStatus.OK);
     }

@@ -37,6 +37,19 @@ public class AccountService {
         return accountList;
     }
 
+    public int showMyAccumulatedPoints(Member member){
+
+        List<Account> byTargetMember = accountRepository.findByTargetMember(member);
+
+        int result = 0;
+        for(Account account : byTargetMember){
+            if(account.getAccountBody().getAccountType()==AccountType.DEPOSIT){
+                result += account.getAccountBody().getAmount();
+            }
+        }
+        return result;
+    }
+
     // 투표글 생성시 거래내역 만들고 저장하는 함수
     public Account saveCreatePostAccount(Member member, Post post, String memo) {
 

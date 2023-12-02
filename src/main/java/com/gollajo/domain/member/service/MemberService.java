@@ -5,6 +5,7 @@ import com.gollajo.domain.account.service.AccountService;
 import com.gollajo.domain.exception.CustomException;
 import com.gollajo.domain.exception.ErrorCode;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
+import com.gollajo.domain.member.dto.RequestMypageDto;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.entity.enums.Grade;
 import com.gollajo.domain.exception.handler.MemberExceptionHandler;
@@ -139,6 +140,21 @@ public class MemberService {
         accountService.savePaymentAccount(targetMember, amount);
 
         return targetMember.getPoint();
+    }
+
+    public RequestMypageDto getMypageInfo(Member member){
+        int accumulatedPoints = accountService.showMyAccumulatedPoints(member);
+        RequestMypageDto mypageDto = RequestMypageDto.builder()
+                .accumulatedPoints(accumulatedPoints)
+                .age(member.getAge())
+                .gender(member.getGender())
+                .numOfVoting(member.getNumOfVoting())
+                .grade(member.getGrade())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .socialType(member.getSocialType())
+                .build();
+        return mypageDto;
     }
 
 }

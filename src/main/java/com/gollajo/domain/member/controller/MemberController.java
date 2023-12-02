@@ -4,10 +4,12 @@ import com.gollajo.domain.account.dto.AccountResponse;
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.service.AccountService;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
+import com.gollajo.domain.member.dto.RequestMypageDto;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,7 @@ public class MemberController {
 
         int currentPoint = memberService.savePaymentMember(adminMember,targetMember, point);
 
+
         return new ResponseEntity<>(currentPoint, HttpStatus.OK);
     }
 
@@ -79,13 +82,15 @@ public class MemberController {
     @Operation(summary = "내 정보보기", description = "내 정보를 조회한다.")
     @ApiResponse(responseCode = "200", description = "정보조회 성공")
     @GetMapping("/my-page")
-    public ResponseEntity<Member> showMyPage(@CookieValue(name="memberId", required = false)Long memberId){
+    public ResponseEntity<RequestMypageDto> showMyPage(@CookieValue(name="memberId", required = false)Long memberId, HttpServletRequest request){
         log.info("쿠키값이 들어왔는지 확인:memberID:{}", memberId);
+        log.info(request.getHeader("Cookie").toString());
         Member member = memberService.findById(memberId);
 
-        //TODO : 내 정보보기에서 Dto를 따로 만들지 고민중
+        RequestMypageDto mypageInfo = memberService.getMypageInfo(member);
+        //TODO: 누적합계 계산해서 requestMypageDto 만들어서 response로 보내주기
 
-        return new ResponseEntity<>(member, HttpStatus.OK);
+        return new ResponseEntity<>(mypageInfo, HttpStatus.OK);
     }
 
 

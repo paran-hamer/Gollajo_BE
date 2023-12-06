@@ -149,6 +149,7 @@ public class MemberService {
                 .age(member.getAge())
                 .gender(member.getGender())
                 .numOfVoting(member.getNumOfVoting())
+                .point(member.getPoint())
                 .grade(member.getGrade())
                 .email(member.getEmail())
                 .nickname(member.getNickname())

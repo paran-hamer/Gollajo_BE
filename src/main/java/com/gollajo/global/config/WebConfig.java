@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8080", "http://localhost:3000","https://gollajo-fe-home-git-feat-login-han-changmins-projects.vercel.app","https://gollajo-fe-home.vercel.app") // 허용할 출처
+                .allowedOrigins("http://localhost:8080","http://localhost:3000","https://gollajo-fe-home-git-feat-login-han-changmins-projects.vercel.app","https://gollajo-fe-home.vercel.app") // 허용할 출처
                 .allowedMethods("GET","OPTIONS","POST","DELETE") // 허용할 HTTP method
                 .allowedHeaders("*")
                 .allowCredentials(true) // 쿠키 인증 요청 허용

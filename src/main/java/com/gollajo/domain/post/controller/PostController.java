@@ -5,6 +5,7 @@ import com.gollajo.domain.member.service.MemberService;
 import com.gollajo.domain.post.dto.PostCreateRequest;
 import com.gollajo.domain.post.dto.response.PostInfoResponse;
 import com.gollajo.domain.post.dto.response.PostListResponse;
+import com.gollajo.domain.post.entity.Post;
 import com.gollajo.domain.post.service.PostService;
 import com.gollajo.domain.vote.dto.VoteResultResponse;
 import com.gollajo.domain.vote.service.VoteService;
@@ -119,6 +120,37 @@ public class PostController {
                 voteService.createVote(member, postId, optionId);
 
         return new ResponseEntity<>(voteResult,HttpStatus.OK);
+    }
+
+    @GetMapping("/result/{postId}")
+    public ResponseEntity<List<VoteResultResponse>> justResult
+            (@CookieValue(name="memberId",required = false)Long memberId,
+             @PathVariable Long postId
+    ){
+        Member member = memberService.findById(memberId);
+        Post post = postService.findByPostId(postId);
+        List<VoteResultResponse> voteResult = voteService.getVoteResult(post);
+
+        return new ResponseEntity<>(voteResult, HttpStatus.OK);
+    }
+
+    @GetMapping("/check/{postId}")
+    public ResponseEntity<Long> check
+            (@CookieValue(name="memberId",required = false)Long memberId,
+             @PathVariable Long postId
+            ){
+        Member member = memberService.findById(memberId);
+        Post post = postService.findByPostId(postId);
+
+        boolean checkResult = voteService.checkAlreadyVote(member, post);
+
+        if(checkResult==true){
+            Long optionId = voteService.checkWhatVote(member, post);
+            return new ResponseEntity<>(optionId, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(0L, HttpStatus.OK);
+        }
+
     }
 
 

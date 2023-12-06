@@ -100,7 +100,7 @@ public class Member extends BaseTimeEntity {
                 .nickname(response.kakaoAccount().profile().nickname())
                 .socialType(SocialType.KAKAO)
                 .socialId(response.id().toString())
-                .point(0)
+                .point(1000)
                 .age(0)
                 .grade(Grade.LV1)
                 .numOfVoting(0)

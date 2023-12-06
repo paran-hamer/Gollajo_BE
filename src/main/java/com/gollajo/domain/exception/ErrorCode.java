@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
+    ALL(HttpStatus.BAD_REQUEST,000,"잡다한 예외 모두"),
+
     //인증예외(1번대)
     NO_AUTHORITY(HttpStatus.BAD_REQUEST, 100, "권한 없습니다."),
 

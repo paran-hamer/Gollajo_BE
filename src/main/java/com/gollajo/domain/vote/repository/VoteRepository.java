@@ -13,6 +13,8 @@ public interface VoteRepository extends JpaRepository<Vote,Long> {
 
     boolean existsByMemberAndPost(Member member, Post post);
 
+    Vote findByMemberAndPost(Member member, Post post);
+
     int countByPost(Post post);
 
     List<Vote> findAllByPost(Post post);

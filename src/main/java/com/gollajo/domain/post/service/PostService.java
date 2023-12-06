@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -325,6 +326,12 @@ public class PostService {
 
         }
 
+    }
+
+    public Post findByPostId(Long postId){
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.ALL));
+
+        return post;
     }
 
 }

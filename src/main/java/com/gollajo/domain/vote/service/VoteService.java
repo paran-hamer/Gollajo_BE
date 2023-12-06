@@ -1,6 +1,8 @@
 package com.gollajo.domain.vote.service;
 
 import com.gollajo.domain.account.service.AccountService;
+import com.gollajo.domain.exception.CustomException;
+import com.gollajo.domain.exception.ErrorCode;
 import com.gollajo.domain.exception.handler.VoteExceptionHandler;
 import com.gollajo.domain.member.entity.Member;
 import com.gollajo.domain.member.service.MemberService;
@@ -98,7 +100,7 @@ public class VoteService {
         return vote;
     }
 
-    private List<VoteResultResponse> getVoteResult(Post post){
+    public List<VoteResultResponse> getVoteResult(Post post){
 
         List<Vote> voteList = voteRepository.findAllByPost(post);
 
@@ -167,6 +169,19 @@ public class VoteService {
         }
 
         return optionContent;
+    }
+
+    public boolean checkAlreadyVote(Member member,Post post){
+        if(voteRepository.existsByMemberAndPost(member,post)){
+            return true;
+        }
+        return false;
+    }
+
+    public Long checkWhatVote(Member member,Post post){
+        Vote vote = voteRepository.findByMemberAndPost(member, post);
+        TextOption textOption = vote.getTextOption();
+        return textOption.getId();
     }
 
 }

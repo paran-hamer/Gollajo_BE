@@ -46,10 +46,7 @@ public class AuthController {
                 .path("/")
                 .build();
         response.addHeader(SET_COOKIE,cookie.toString());
-//        Cookie cookie = new Cookie("memberId", String.valueOf(registerMemberId));
-//        cookie.setMaxAge(60*60*1);
-//        cookie.setPath("/");
-//        response.addCookie(cookie);
+
 
         return new ResponseEntity<>(new LoginResponse("성공"),HttpStatus.OK);
     }

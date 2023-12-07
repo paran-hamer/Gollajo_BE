@@ -127,7 +127,6 @@ public class PostController {
             (@CookieValue(name="memberId",required = false)Long memberId,
              @PathVariable Long postId
     ){
-        Member member = memberService.findById(memberId);
         Post post = postService.findByPostId(postId);
         List<VoteResultResponse> voteResult = voteService.getVoteResult(post);
 
@@ -136,9 +135,10 @@ public class PostController {
 
     @GetMapping("/check/{postId}")
     public ResponseEntity<Long> check
-            (@CookieValue(name="memberId",required = false)Long memberId,
+            (@CookieValue(name="memberId")Long memberId,
              @PathVariable Long postId
             ){
+        log.info(memberId.toString());
         Member member = memberService.findById(memberId);
         Post post = postService.findByPostId(postId);
 

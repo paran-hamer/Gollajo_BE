@@ -28,7 +28,7 @@ public class ScheduleService {
     private final PostRepository postRepository;
     private final PostService postService;
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 30000)
     @Modifying
     @Transactional
     public void updatePostState(){

@@ -3,6 +3,7 @@ package com.gollajo.domain.member.controller;
 import com.gollajo.domain.account.dto.AccountResponse;
 import com.gollajo.domain.account.entity.Account;
 import com.gollajo.domain.account.service.AccountService;
+import com.gollajo.domain.auth.dto.LoginResponse;
 import com.gollajo.domain.member.dto.CreateMemberRequest;
 import com.gollajo.domain.member.dto.RequestMypageDto;
 import com.gollajo.domain.member.entity.Member;
@@ -10,13 +11,17 @@ import com.gollajo.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -45,6 +50,21 @@ public class MemberController {
         List<AccountResponse> accountResponses = accountService.transferAccountResponse(accounts);
 
         return new ResponseEntity<>(accountResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(@CookieValue(name="memberId", required = false)Long memberId,
+                                         HttpServletResponse response){
+        ResponseCookie cookie = ResponseCookie.from("memberId", String.valueOf(memberId))
+                .maxAge(0)
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .build();
+        response.addHeader(SET_COOKIE,cookie.toString());
+
+        return new ResponseEntity<>("로그아웃되었습니다.",HttpStatus.OK);
     }
 
 

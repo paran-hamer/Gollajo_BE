@@ -34,10 +34,6 @@ public class AuthController {
         //TODO: 로그아웃시 세션에 있던 내용을 삭제시켜주기
         Long registerMemberId = authService.register(code);
 
-//        HttpSession session = request.getSession();
-//        session.setAttribute("memberId",registerMemberId);
-//        session.setMaxInactiveInterval(1800);
-
         ResponseCookie cookie = ResponseCookie.from("memberId", String.valueOf(registerMemberId))
                 .maxAge(60 * 60 * 1)
                 .sameSite("None")

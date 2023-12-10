@@ -45,7 +45,6 @@ public class PostController {
     @Parameter(name="type",description = "투표글 생성 타입 설정")
     @PostMapping(value = "/create",params = "type=1")
     public ResponseEntity<Long> createStringPost(@CookieValue(name="memberId", required = false)Long memberId,@RequestBody PostCreateRequest postCreateRequest){
-        log.info(postCreateRequest.toString());
 
         Member member = memberService.findById(memberId);
 
@@ -63,7 +62,6 @@ public class PostController {
             @RequestPart("images") List<MultipartFile> images,
             @RequestPart("request") PostCreateRequest postCreateRequest
     ) {
-        log.info(postCreateRequest.toString());
 
         Member member = memberService.findById(memberId);
 
@@ -103,6 +101,7 @@ public class PostController {
     @GetMapping("/show/{postId}")
     public ResponseEntity<PostInfoResponse> showPostInfo(@PathVariable Long postId){
         PostInfoResponse postInfoResponse = postService.showPostInfo(postId);
+
         return new ResponseEntity<>(postInfoResponse,HttpStatus.OK);
     }
 
@@ -138,7 +137,7 @@ public class PostController {
             (@CookieValue(name="memberId")Long memberId,
              @PathVariable Long postId
             ){
-        log.info(memberId.toString());
+
         Member member = memberService.findById(memberId);
         Post post = postService.findByPostId(postId);
 

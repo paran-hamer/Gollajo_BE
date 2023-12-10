@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gollajo.domain.account.entity.enums.AccountState.HOLDING;
+import static com.gollajo.domain.account.entity.enums.AccountType.WITHDRAW;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -37,13 +40,13 @@ public class AccountService {
         return accountList;
     }
 
-    public int showMyAccumulatedPoints(Member member){
+    public int showMyAccumulatedPoints(Member member) {
 
         List<Account> byTargetMember = accountRepository.findByTargetMember(member);
 
         int result = 0;
-        for(Account account : byTargetMember){
-            if(account.getAccountBody().getAccountType()==AccountType.DEPOSIT){
+        for (Account account : byTargetMember) {
+            if (account.getAccountBody().getAccountType() == AccountType.DEPOSIT) {
                 result += account.getAccountBody().getAmount();
             }
         }
@@ -59,8 +62,8 @@ public class AccountService {
         AccountBody accountBody = AccountBody.builder()
                 .amount(sumAmount)
                 .memo(memo)
-                .accountType(AccountType.WITHDRAW)
-                .accountState(AccountState.HOLDING)
+                .accountType(WITHDRAW)
+                .accountState(HOLDING)
                 .build();
 
         Account account = Account.builder()
@@ -74,7 +77,7 @@ public class AccountService {
     }
 
     //투표글 취소시 거래내역을 취소로 변경 후 저장하는 함수
-    public Account saveCancelPostAccount(Member member,Post post){
+    public Account saveCancelPostAccount(Member member, Post post) {
 
         Account account = accountRepository.findByTargetMemberAndTargetPost(member, post)
                 .orElseThrow(() -> new CustomException(ErrorCode.NO_ACCOuNT_HISTORY));
@@ -88,7 +91,7 @@ public class AccountService {
     }
 
     //투표시 투표를 통한 포인트 거래내역을 기록 후 저장하는 함수
-    public Account saveVoteAccount(Member member,Post post){
+    public Account saveVoteAccount(Member member, Post post) {
         AccountBody accountBody = AccountBody.builder()
                 .amount(post.getPostBody().getPointPerVote())
                 .memo("Get voting point")
@@ -102,11 +105,10 @@ public class AccountService {
                 .targetPost(post)
                 .build();
 
-        accountRepository.save(account);
-        return account;
+        return accountRepository.save(account);
     }
 
-    public Account savePaymentAccount(Member member,int amount){
+    public Account savePaymentAccount(Member member, int amount) {
         AccountBody accountBody = AccountBody.builder()
                 .amount(amount)
                 .memo("Payment point")
@@ -122,10 +124,11 @@ public class AccountService {
         accountRepository.save(account);
         return account;
     }
-    public List<AccountResponse> transferAccountResponse(List<Account> accounts){
+
+    public List<AccountResponse> transferAccountResponse(List<Account> accounts) {
         List<AccountResponse> accountResponses = new ArrayList<>();
-        for(Account account:accounts){
-            if(account.getTargetPost()==null){
+        for (Account account : accounts) {
+            if (account.getTargetPost() == null) {
                 AccountResponse accountResponse = AccountResponse.builder()
                         .accountId(account.getId())
                         .targetMember(account.getTargetMember().getId())
@@ -135,7 +138,7 @@ public class AccountService {
                         .memo(account.getAccountBody().getMemo())
                         .build();
                 accountResponses.add(accountResponse);
-            }else{
+            } else {
                 AccountResponse accountResponse = AccountResponse.builder()
                         .accountId(account.getId())
                         .targetMember(account.getTargetMember().getId())
@@ -150,24 +153,22 @@ public class AccountService {
         }
         return accountResponses;
     }
-    public void updateAccountState(Post post){
+
+    public void updateAccountState(Post post) {
 
         final List<Account> allCount = accountRepository.findByTargetMember(post.getMember());
-
-
         for (Account account : allCount) {
 
             final AccountType accountType = account.getAccountBody().getAccountType();
             final AccountState accountState = account.getAccountBody().getAccountState();
 
-            if (accountType == AccountType.WITHDRAW &&
-                    accountState == AccountState.HOLDING) {
-
+            if (accountType == WITHDRAW && accountState == HOLDING) {
                 account.getAccountBody().setAccountStateToComplete();
                 accountRepository.saveAndFlush(account);
-
             }
         }
+        // 10개를 => jdbcTemplate batchSave vs. jpql
+//        accountRepository.saveAll(allCount);
     }
 
 }

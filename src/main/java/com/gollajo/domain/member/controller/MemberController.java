@@ -103,8 +103,7 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "정보조회 성공")
     @GetMapping("/my-page")
     public ResponseEntity<RequestMypageDto> showMyPage(@CookieValue(name="memberId", required = false)Long memberId, HttpServletRequest request){
-        log.info("쿠키값이 들어왔는지 확인:memberID:{}", memberId);
-        log.info(request.getHeader("Cookie").toString());
+
         Member member = memberService.findById(memberId);
 
         RequestMypageDto mypageInfo = memberService.getMypageInfo(member);

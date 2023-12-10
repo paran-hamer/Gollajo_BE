@@ -34,9 +34,8 @@ public class MemberService {
 //        final Member maybeMember = memberRepository.findBySocialIdAndSocialType(member.getSocialId(), member.getSocialType())
 //                .orElseThrow(()-> new CustomException(ErrorCode.NO_MEMBER));
 
-        log.info("멤버를 저장하러 옴");
         Member savedMember = memberRepository.save(member);
-        log.info("저장됨");
+
         return savedMember;
     }
 

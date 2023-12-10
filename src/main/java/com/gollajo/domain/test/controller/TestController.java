@@ -23,7 +23,7 @@ public class TestController {
     @ApiResponse(responseCode = "200", description = "테스트 성공")
     @GetMapping
     public ResponseEntity<String> test(@CookieValue(name = "memberId", required = false)Long memberId){
-        log.info(Long.toString(memberId));
+
         final String testMessage = testService.test();
         return ResponseEntity.ok("testMessage:"+Long.toString(memberId));
     }

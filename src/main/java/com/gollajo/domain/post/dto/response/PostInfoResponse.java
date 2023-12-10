@@ -22,4 +22,10 @@ public record PostInfoResponse(
         LocalDateTime expirationDate,
         List<PostInfoOption> options
 ) {
+    @Override
+    public String toString() {
+        return "PostInfoResponse{" +
+                "expirationDate=" + expirationDate +
+                '}';
+    }
 }

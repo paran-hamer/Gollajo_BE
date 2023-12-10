@@ -22,11 +22,14 @@ import com.gollajo.domain.s3.AmazonS3Service;
 import com.gollajo.domain.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -169,7 +172,7 @@ public class PostService {
                 .maxPostCount(post.getPostBody().getMaxVotes())
                 .pointPerVote(post.getPostBody().getPointPerVote())
                 .createdAt(post.getCreatedAt())
-                .expirationDate(post.getPostBody().getExpirationDate())
+                .expirationDate(post.getPostBody().getExpirationDate().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime())
                 .options(options)
                 .build();
 
@@ -192,6 +195,9 @@ public class PostService {
 
     private Post makePost(PostCreateRequest request, Member member,PostType postType){
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+
         postExceptionHandler.createPostException(request,member);
 
         PostBody createdPostBody = PostBody.builder()
@@ -206,7 +212,7 @@ public class PostService {
         Post post = Post.builder()
                 .postBody(createdPostBody)
                 .member(member)
-                .postState(PostState.STATE_GENERATING)
+                .postState(PostState.STATE_PROCEEDING)
                 .build();
 
         return post;

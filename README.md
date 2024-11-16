@@ -1,3 +1,107 @@
+
+# 골라줘
+
+### ✨골라줘, NL✨
+<img width="1199" alt="스크린샷 2024-09-23 오후 7 17 58" src="https://github.com/user-attachments/assets/a2973b1e-1eb6-4170-8a83-335467e1575d">
+
+
+
+## 🗨️ About 골라줘 서비스
+"고민거리가 있는 투표를 올리고 다른이용자들이 투표를 함으로써 고민을 해결해주고 리워드를 지급하는 서비스"
+
+### <기존의 문제점 해결>
+- 실시간 좌석현황의 보기 어려움 -> 실시간 좌석현황 제공
+- 열람실 좌석표(종이)의 분실로 인한 이용 제한 -> 분실될 걱정없는 디지털 좌석예약
+- 자리 맡아두기 등으로 인한 퇴실요청의 어려움 -> 퇴실요청기능을 통한 자리의 순환 가속화
+<table>
+<tr>
+<td align="center">
+   <img width="1190" alt="메인페이지">
+</td>
+<td align="center">
+    <img width="1186" alt="스크린샷 2024-09-23 오후 7 22 18">
+</td>
+</tr>
+<tr>
+<td align="center">메인 페이지</td>
+<td align="center">관리자 페이지</td>
+</tr>
+<tr>
+<td align="center">
+   <img width="1173" alt="예약 프롬프트">
+</td>
+<td align="center">
+    <img width="1193" alt="연장 프롬프트">
+</td>
+</tr>
+<tr>
+<td align="center">예약 페이지</td>
+<td align="center">연장 페이지</td>
+</tr>
+<tr>
+<td align="center">
+   <img width="1193" alt="관리자모드 전환">
+</td>
+<td align="center">
+    <img width="1191" alt="앱 종료 불가">
+</td>
+</tr>
+<tr>
+<td align="center">관리자모드 전환 프롬프트</td>
+<td align="center">앱 종료 불가</td>
+</tr>
+</table>
+## 👨🏻‍💻 Member
+<table>
+<tr>
+<td align="center">프론트엔드</td>
+<td align="center">백엔드</td>
+<td align="center">백엔드</td>
+</tr>
+  <tr>
+    <td align="center" width="120px">
+      <a href="https://github.com/kimsunin" target="_blank">
+        <img src="https://avatars.githubusercontent.com/kimsunin" alt="김선인 프로필" />
+      </a>
+    </td>
+    <td align="center" width="120px">
+      <a href="https://github.com/hcmhcs" target="_blank">
+        <img src="https://avatars.githubusercontent.com/hcmhcs" alt="한창민 프로필" />
+      </a>
+      <td align="center" width="120px">
+      <a href="https://github.com/hcmhcs" target="_blank">
+        <img src="https://avatars.githubusercontent.com/hcmhcs" alt="한창민 프로필" />
+      </a>
+  </tr>
+ <tr>
+    <td align="center">
+      <a href="https://github.com/kimsunin" target="_blank">
+        김선인
+      </a>
+    </td>
+     <td align="center">
+      <a href="https://github.com/hcmhcs" target="_blank">
+       한창민
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/hcmhcs" target="_blank">
+       한창민
+      </a>
+    </td>
+  </tr>
+<tr>
+<td align="center"> <a href="https://github.com/HK-DUO/seating-system">Repository</a></td>
+<td align="center"> <a href="https://github.com/HK-DUO/seating-system">Repository</a></td>
+<td align="center"> <a href="https://github.com/HK-DUO/seating-system">Repository</a></td>
+</tr>
+</table>
+
+## 🛠️ Skills
+<img width="410" alt="스크린샷 2024-09-23 오후 7 51 28">
+
+
+
 # Gollajo Service
 - 고민거리가 있는 투표를 올리고 다른이용자들이 투표를 함으로써 고민을 해결해주고 리워드를 지급하는 서비스
 - Spring RestAPI

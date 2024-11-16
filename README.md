@@ -10,9 +10,7 @@
 "고민거리가 있는 투표를 올리고 다른이용자들이 투표를 함으로써 고민을 해결해주고 리워드를 지급하는 서비스"
 
 ### <기존의 문제점 해결>
-- 실시간 좌석현황의 보기 어려움 -> 실시간 좌석현황 제공
-- 열람실 좌석표(종이)의 분실로 인한 이용 제한 -> 분실될 걱정없는 디지털 좌석예약
-- 자리 맡아두기 등으로 인한 퇴실요청의 어려움 -> 퇴실요청기능을 통한 자리의 순환 가속화
+- 의사결정에 도움
 <table>
 <tr>
 <td align="center">
@@ -61,7 +59,7 @@
   <tr>
     <td align="center" width="120px">
       <a href="https://github.com/kimsunin" target="_blank">
-        <img src="https://avatars.githubusercontent.com/kimsunin" alt="김선인 프로필" />
+        <img src="https://avatars.githubusercontent.com/kimsunin" alt="임수진 프로필" />
       </a>
     </td>
     <td align="center" width="120px">
@@ -70,13 +68,13 @@
       </a>
       <td align="center" width="120px">
       <a href="https://github.com/hcmhcs" target="_blank">
-        <img src="https://avatars.githubusercontent.com/hcmhcs" alt="한창민 프로필" />
+        <img src="https://avatars.githubusercontent.com/hcmhcs" alt="최재민 프로필" />
       </a>
   </tr>
  <tr>
     <td align="center">
       <a href="https://github.com/kimsunin" target="_blank">
-        김선인
+        임수진
       </a>
     </td>
      <td align="center">
@@ -86,7 +84,7 @@
     </td>
     <td align="center">
       <a href="https://github.com/hcmhcs" target="_blank">
-       한창민
+       최재민
       </a>
     </td>
   </tr>

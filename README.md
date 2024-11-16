@@ -16,7 +16,7 @@
 <table>
 <tr>
 <td align="center">
-   <img width="1190" alt="메인페이지">
+   <img width="1190" alt="메인페이지" src="https://github.com/user-attachments/assets/2cf4918e-ccec-4e2f-9d5c-d0c64530ce6c">
 </td>
 <td align="center">
     <img width="1186" alt="스크린샷 2024-09-23 오후 7 22 18">

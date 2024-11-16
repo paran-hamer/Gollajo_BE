@@ -2,7 +2,7 @@
 # 골라줘
 
 ### ✨골라줘, NL✨
-<img width="1199" alt="스크린샷 2024-09-23 오후 7 17 58" src="https://github.com/user-attachments/assets/a2973b1e-1eb6-4170-8a83-335467e1575d">
+<img width="1199" alt="스크린샷 2024-09-23 오후 7 17 58" src="https://github.com/user-attachments/assets/2cf4918e-ccec-4e2f-9d5c-d0c64530ce6c">
 
 
 
@@ -16,7 +16,7 @@
 <table>
 <tr>
 <td align="center">
-   <img width="1190" alt="메인페이지" src="https://github.com/user-attachments/assets/2cf4918e-ccec-4e2f-9d5c-d0c64530ce6c">
+   <img width="1190" alt="메인페이지">
 </td>
 <td align="center">
     <img width="1186" alt="스크린샷 2024-09-23 오후 7 22 18">
